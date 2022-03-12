@@ -1,4 +1,4 @@
-package goosea
+package goosea.isa
 
 implicit class Fin32(i: Int) {
   if (!(0<=i && i<32)) {
