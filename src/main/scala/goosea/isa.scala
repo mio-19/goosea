@@ -11,11 +11,17 @@ implicit class Fin16(i: Int) {
   }
 }
 
-implicit class U32(i: Int) {
-  // todo
+implicit class U32(i: Long) {
+  if (!(0<=i && i<4294967296L)) {
+    throw new IllegalArgumentException()
+  }
 }
 
-implicit class U8(i:Short)
+implicit class U8(i:Int) {
+  if (!(0<=i && i<256)) {
+    throw new IllegalArgumentException()
+  }
+}
 
 sealed trait Reg
 object Reg {
