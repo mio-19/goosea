@@ -62,7 +62,9 @@ implicit class Imm32_20_1(i: Imm32)
 // Atomic instruction flag: Acquire and Release
 final case class AQRL(acquire: Boolean, release: Boolean)
 
-sealed trait RV64Instr
+sealed trait Instr
+
+sealed trait RV64Instr extends Instr
 object RV64Instr {
   // RV64I
   final case class LWU(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
@@ -127,7 +129,7 @@ object RV64Instr {
   final case class FENCE_I(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
 }
 
-sealed trait RV32Instr
+sealed trait RV32Instr extends Instr
 object RV32Instr {
   // RV32I
   final case class LUI(dest: Reg, i: Imm32_31_12) extends RV32Instr
