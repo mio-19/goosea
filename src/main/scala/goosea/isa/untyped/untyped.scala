@@ -1,11 +1,18 @@
 package goosea.isa.untyped
 
-import goosea.isa.U32
-import scodec._
-import scodec.bits._
-import scodec.codecs._
+import goosea.isa.*
+import scodec.*
+import scodec.bits.*
+import scodec.codecs.*
 
-implicit class Bytecode(instr: U32)
+import scala.language.implicitConversions
+
+implicit class Bytecode(instr: U32){
+  def toU32:U32 = instr
+}
+
+implicit def bytecode2u32(x:Bytecode):U32 = x.toU32
+implicit def bytecode2bitvector(x:Bytecode):BitVector = x
 
 sealed trait UntypedInstr
 
@@ -45,3 +52,15 @@ implicit val rshamt32typeCodec: Codec[RShamt32Type] = (("opcode" | uint(7)) :: (
 final case class RAType(opcode: Int, rd: Int, funct3: Int, rs1: Int, rs2: Int, rl: Boolean, aq: Boolean, funct5: Int) extends UntypedInstr
 
 implicit val ratypeCodec: Codec[RAType] = (("opcode" | uint(7)) :: ("rd" | uint(5)) :: ("funct3" | uint(3)) :: ("rs1" | uint(5)) :: ("rs2" | uint(5)) :: ("rl" | bool) :: ("aq" | bool) :: ("funct5" | uint(5))).as[RAType]
+
+final case class RShamt64Type(opcode: Int, rd: Int, funct3: Int, rs1: Int, shamt: Int, funct6: Int) extends UntypedInstr
+
+implicit val rshamt64typeCodec: Codec[RShamt64Type] = (("opcode" | uint(7)) :: ("rd" | uint(5)) :: ("funct3" | uint(3)) :: ("rs1" | uint(5)) :: ("shamt" | uint(6)) :: ("funct6" | uint(6))).as[RShamt64Type]
+
+final case class FenceType(opcode: Int, rd: Int, funct3: Int, rs1: Int, succ: Int, pred: Int, fm: Int) extends UntypedInstr
+
+implicit val fencetyoeCodec: Codec[FenceType] = (("opcode" | uint(7)) :: ("rd" | uint(5)) :: ("funct3" | uint(3)) :: ("rs1" | uint(5)) :: ("succ" | uint(4)) :: ("pred" | uint(4)) :: ("fm" | uint(4))).as[FenceType]
+
+final case class OpcodePeek(opcode: Int, dummy: Int) extends UntypedInstr
+
+implicit val opcodepeekCodec: Codec[OpcodePeek] = (("opcode" | uint(7)) :: ("dummy" | uint(25))).as[OpcodePeek]
