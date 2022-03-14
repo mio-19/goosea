@@ -43,14 +43,23 @@ object OpcodeMap {
   val _custom_3_or_rv128 = 30
 }
 
-private def u[T](opcode:(Reg,Imm32_31_12)=>T, untyped: Bytecode, reg: Int=>Reg): T = {
+private def u[T](opcode: (Reg, Imm32_31_12) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val ut = unwarp(utypeCodec.decode(untyped))
   opcode(reg(ut.rd), Imm32_31_12(ut.imm31_12))
 }
-private def j[T](opcode:(Reg, Imm32_20_1)=>T, untyped: Bytecode, reg: Int=>Reg):T={
+private def j[T](opcode: (Reg, Imm32_20_1) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val jt = unwarp(jtypeCodec.decode(untyped))
 
-  ???
+  val imm20 = Imm32_20_20(jt.imm20)
+  val imm10_1 = Imm32_10_1(jt.imm10_1)
+  val imm11 = Imm32_11_11(jt.imm11)
+  val imm19_12 = Imm32_19_12(jt.imm19_12)
+  val imm = imm20.bitor(imm19_12).bitor(imm11).bitor(imm10_1)
+  opcode(reg(jt.rd), Imm32_20_1.from(imm))
+}
+private def i[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val it = unwarp(itypeCodec.decode(untyped))
+  opcode(reg(it.rd), reg(it.rs1), Imm32_11_0(it.imm11_0))
 }
 
 private def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
@@ -67,7 +76,9 @@ def decode(untyped: Bytecode): Option[Instr] = {
   val opcode = untyped.opcode >> 2 // stripping away `inst[1:0]=11`
   Some(opcode match {
     case OpcodeMap.LUI => u(RV32Instr.LUI, untyped, gp)
-    case OpcodeMap.AUIPC => u(RV32Instr.AUIPC,untyped,gp)
+    case OpcodeMap.AUIPC => u(RV32Instr.AUIPC, untyped, gp)
+    case OpcodeMap.JAL => j(RV32Instr.JAL, untyped, gp)
+    case OpcodeMap.JALR => i(RV32Instr.JALR, untyped, gp)
     case _ => return None
   })
 }

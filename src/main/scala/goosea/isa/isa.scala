@@ -77,7 +77,7 @@ object RoundingMode {
 
 // This is used to represent lazily-decoded immediate value
 // which is written as `imm[HIGH_BIT:LOW_BIT]` in the risc-v specification.
-class Imm32(val highBit: Int, val lowBit: Int, i: U32) {
+class Imm32(val highBit: Int, val lowBit: Int, val i: U32) {
 
   def validBits = highBit - lowBit + 1
 
@@ -102,6 +102,16 @@ class Imm32_4_0(i: U32) extends Imm32(4, 0, i)
 class Imm32_31_12(i: U32) extends Imm32(31, 12, i)
 
 class Imm32_20_1(i: U32) extends Imm32(20, 1, i)
+object Imm32_20_1 {
+  def from(x: Imm32): Imm32_20_1 = if(x.highBit==20&&x.lowBit==1) Imm32_20_1(x.i) else throw new IllegalArgumentException()
+}
+
+class Imm32_20_20(i: U32) extends Imm32(20, 20, i)
+
+class Imm32_10_1(i: U32) extends Imm32(10, 1, i)
+
+class Imm32_11_11(i: U32) extends Imm32(11, 11, i)
+class Imm32_19_12(i: U32) extends Imm32(11, 11, i)
 
 // Atomic instruction flag: Acquire and Release
 final case class AQRL(acquire: Boolean, release: Boolean)
