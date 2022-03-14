@@ -1,6 +1,7 @@
 package goosea.isa.untyped
 
 import goosea.isa.*
+import goosea.utils._
 import scodec.*
 import scodec.bits.*
 import scodec.codecs.*
@@ -26,7 +27,7 @@ implicit class Bytecode(instr: U32) {
   def u = unwarp(utypeCodec.decode(instr))
 
   def s = unwarp(stypeCodec.decode(instr))
-  
+
   def rshamt64=unwarp(rshamt64typeCodec.decode(instr))
 }
 

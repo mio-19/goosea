@@ -1,6 +1,7 @@
 package goosea.isa.untyped
 
-import goosea.isa.{Imm32_31_12, *}
+import goosea.isa._
+import goosea.utils._
 
 import scala.language.implicitConversions
 
