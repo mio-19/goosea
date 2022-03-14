@@ -1,6 +1,6 @@
 package goosea.isa.untyped
 
-import goosea.isa._
+import goosea.isa.{Imm32_31_12, *}
 import scodec.{Attempt, DecodeResult}
 
 import scala.language.implicitConversions
@@ -45,7 +45,12 @@ object OpcodeMap {
 
 private def u[T](opcode:(Reg,Imm32_31_12)=>T, untyped: Bytecode, reg: Int=>Reg): T = {
   val ut = unwarp(utypeCodec.decode(untyped))
-  opcode(reg(ut.rd), Imm32(ut.imm31_12))
+  opcode(reg(ut.rd), Imm32_31_12(ut.imm31_12))
+}
+private def j[T](opcode:(Reg, Imm32_20_1)=>T, untyped: Bytecode, reg: Int=>Reg):T={
+  val jt = unwarp(jtypeCodec.decode(untyped))
+
+  ???
 }
 
 private def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
@@ -62,6 +67,7 @@ def decode(untyped: Bytecode): Option[Instr] = {
   val opcode = untyped.opcode >> 2 // stripping away `inst[1:0]=11`
   Some(opcode match {
     case OpcodeMap.LUI => u(RV32Instr.LUI, untyped, gp)
+    case OpcodeMap.AUIPC => u(RV32Instr.AUIPC,untyped,gp)
     case _ => return None
   })
 }

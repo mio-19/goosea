@@ -22,8 +22,12 @@ implicit class U32(i: Long) {
   }
 
   def toLong: Long = i
+
+  def |(other: U32): U32 = this.toLong | other.toLong
+  def >>(other:U32):U32 = this.toLong >> other.toLong
 }
 
+implicit def intToU32(x: Int): U32 = U32(x.toLong)
 implicit def u32ToLong(x: U32): Long = x.toLong
 implicit def u32ToBitVector(x: U32): BitVector = BitVector.fromLong(x, 32)
 
@@ -73,22 +77,31 @@ object RoundingMode {
 
 // This is used to represent lazily-decoded immediate value
 // which is written as `imm[HIGH_BIT:LOW_BIT]` in the risc-v specification.
-final case class Imm32(i: U32) {
+class Imm32(val highBit: Int, val lowBit: Int, i: U32) {
+
+  def validBits = highBit - lowBit + 1
+
+  def decode: U32 = {
+    val mask = (1 << this.validBits) - 1
+    (this.i & mask) << lowBit
+  }
+
+  def bitor(rhs: Imm32): Imm32 = {
+    val lhs = this
+    Imm32(lhs.highBit, rhs.lowBit, (lhs.decode | rhs.decode) >> rhs.lowBit)
+  }
 }
-object Imm32 {
-  def apply(x: Int):Imm32 = Imm32(U32(x))
-}
 
 
-implicit class Imm32_11_0(i: Imm32)
+class Imm32_11_0(i: U32) extends Imm32(11, 0, i)
 
-implicit class Imm32_12_1(i: Imm32)
+class Imm32_12_1(i: U32) extends Imm32(12, 1, i)
 
-implicit class Imm32_4_0(i: Imm32)
+class Imm32_4_0(i: U32) extends Imm32(4, 0, i)
 
-implicit class Imm32_31_12(i: Imm32)
+class Imm32_31_12(i: U32) extends Imm32(31, 12, i)
 
-implicit class Imm32_20_1(i: Imm32)
+class Imm32_20_1(i: U32) extends Imm32(20, 1, i)
 
 // Atomic instruction flag: Acquire and Release
 final case class AQRL(acquire: Boolean, release: Boolean)
