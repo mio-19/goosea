@@ -7,12 +7,29 @@ import scodec.codecs.*
 
 import scala.language.implicitConversions
 
-implicit class Bytecode(instr: U32){
-  def toU32:U32 = instr
+private def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
+  val v = x.require
+  if (v.remainder.isEmpty) v.value else throw new IllegalArgumentException()
 }
 
-implicit def bytecode2u32(x:Bytecode):U32 = x.toU32
-implicit def bytecode2bitvector(x:Bytecode):BitVector = x
+implicit class Bytecode(instr: U32) {
+  def toU32: U32 = instr
+
+  def opcode: Int = unwarp(opcodepeekCodec.decode(instr)).opcode
+
+  def b = unwarp(btypeCodec.decode(instr))
+
+  def i = unwarp(itypeCodec.decode(instr))
+
+  def j = unwarp(jtypeCodec.decode(instr))
+
+  def u = unwarp(utypeCodec.decode(instr))
+
+  def s = unwarp(stypeCodec.decode(instr))
+}
+
+implicit def bytecode2u32(x: Bytecode): U32 = x.toU32
+implicit def bytecode2bitvector(x: Bytecode): BitVector = x
 
 sealed trait UntypedInstr
 

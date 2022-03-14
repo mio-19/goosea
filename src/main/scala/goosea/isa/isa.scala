@@ -24,7 +24,8 @@ implicit class U32(i: Long) {
   def toLong: Long = i
 
   def |(other: U32): U32 = this.toLong | other.toLong
-  def >>(other:U32):U32 = this.toLong >> other.toLong
+
+  def >>(other: U32): U32 = this.toLong >> other.toLong
 }
 
 implicit def intToU32(x: Int): U32 = U32(x.toLong)
@@ -95,15 +96,24 @@ class Imm32(val highBit: Int, val lowBit: Int, val i: U32) {
 
 class Imm32_11_0(i: U32) extends Imm32(11, 0, i)
 
+object Imm32_11_0 {
+  def from(x: Imm32): Imm32_11_0 = if (x.highBit == 11 && x.lowBit == 0) Imm32_11_0(x.i) else throw new IllegalArgumentException()
+}
+
 class Imm32_12_1(i: U32) extends Imm32(12, 1, i)
+
+object Imm32_12_1 {
+  def from(x: Imm32): Imm32_12_1 = if (x.highBit == 12 && x.lowBit == 1) Imm32_12_1(x.i) else throw new IllegalArgumentException()
+}
 
 class Imm32_4_0(i: U32) extends Imm32(4, 0, i)
 
 class Imm32_31_12(i: U32) extends Imm32(31, 12, i)
 
 class Imm32_20_1(i: U32) extends Imm32(20, 1, i)
+
 object Imm32_20_1 {
-  def from(x: Imm32): Imm32_20_1 = if(x.highBit==20&&x.lowBit==1) Imm32_20_1(x.i) else throw new IllegalArgumentException()
+  def from(x: Imm32): Imm32_20_1 = if (x.highBit == 20 && x.lowBit == 1) Imm32_20_1(x.i) else throw new IllegalArgumentException()
 }
 
 class Imm32_20_20(i: U32) extends Imm32(20, 20, i)
@@ -111,7 +121,16 @@ class Imm32_20_20(i: U32) extends Imm32(20, 20, i)
 class Imm32_10_1(i: U32) extends Imm32(10, 1, i)
 
 class Imm32_11_11(i: U32) extends Imm32(11, 11, i)
+
 class Imm32_19_12(i: U32) extends Imm32(11, 11, i)
+
+class Imm32_12_12(i: U32) extends Imm32(12, 12, i)
+
+class Imm32_10_5(i: U32) extends Imm32(10, 5, i)
+
+class Imm32_4_1(i: U32) extends Imm32(4, 1, i)
+
+class Imm32_11_5(i: U32) extends Imm32(11, 5, i)
 
 // Atomic instruction flag: Acquire and Release
 final case class AQRL(acquire: Boolean, release: Boolean)

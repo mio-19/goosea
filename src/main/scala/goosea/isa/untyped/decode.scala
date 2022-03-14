@@ -1,7 +1,6 @@
 package goosea.isa.untyped
 
 import goosea.isa.{Imm32_31_12, *}
-import scodec.{Attempt, DecodeResult}
 
 import scala.language.implicitConversions
 
@@ -44,11 +43,11 @@ object OpcodeMap {
 }
 
 private def u[T](opcode: (Reg, Imm32_31_12) => T, untyped: Bytecode, reg: Int => Reg): T = {
-  val ut = unwarp(utypeCodec.decode(untyped))
+  val ut = untyped.u
   opcode(reg(ut.rd), Imm32_31_12(ut.imm31_12))
 }
 private def j[T](opcode: (Reg, Imm32_20_1) => T, untyped: Bytecode, reg: Int => Reg): T = {
-  val jt = unwarp(jtypeCodec.decode(untyped))
+  val jt = untyped.j
 
   val imm20 = Imm32_20_20(jt.imm20)
   val imm10_1 = Imm32_10_1(jt.imm10_1)
@@ -58,17 +57,24 @@ private def j[T](opcode: (Reg, Imm32_20_1) => T, untyped: Bytecode, reg: Int => 
   opcode(reg(jt.rd), Imm32_20_1.from(imm))
 }
 private def i[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
-  val it = unwarp(itypeCodec.decode(untyped))
+  val it = untyped.i
   opcode(reg(it.rd), reg(it.rs1), Imm32_11_0(it.imm11_0))
 }
-
-private def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
-  val v = x.require
-  if (v.remainder.isEmpty) v.value else throw new IllegalArgumentException()
+private def b[T](opcode: (Reg, Reg, Imm32_12_1) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val bt = untyped.b
+  val imm12 = Imm32_12_12(bt.imm12)
+  val imm10_5 = Imm32_10_5(bt.imm10_5)
+  val imm11 = Imm32_11_11(bt.imm11)
+  val imm4_1 = Imm32_4_1(bt.imm4_1)
+  val imm = imm12.bitor(imm11).bitor(imm10_5).bitor(imm4_1)
+  opcode(reg(bt.rs1), reg(bt.rs2), Imm32_12_1.from(imm))
 }
-
-implicit class BytecodeOpcode(bytecode: Bytecode) {
-  def opcode: Int = unwarp(opcodepeekCodec.decode(bytecode)).opcode
+private def s[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val st = untyped.s
+  val imm11_5 = Imm32_11_5(st.imm11_5)
+  val imm4_0 = Imm32_4_0(st.imm4_0)
+  val imm = imm11_5.bitor(imm4_0)
+  opcode(reg(st.rs1), reg(st.rs2), Imm32_11_0.from(imm))
 }
 
 
@@ -79,6 +85,32 @@ def decode(untyped: Bytecode): Option[Instr] = {
     case OpcodeMap.AUIPC => u(RV32Instr.AUIPC, untyped, gp)
     case OpcodeMap.JAL => j(RV32Instr.JAL, untyped, gp)
     case OpcodeMap.JALR => i(RV32Instr.JALR, untyped, gp)
+    case OpcodeMap.BRANCH => untyped.b.funct3 match {
+      case 0 => b(RV32Instr.BEQ, untyped, gp)
+      case 1 => b(RV32Instr.BNE, untyped, gp)
+      case 4 => b(RV32Instr.BLT, untyped, gp)
+      case 5 => b(RV32Instr.BGE, untyped, gp)
+      case 6 => b(RV32Instr.BLTU, untyped, gp)
+      case 7 => b(RV32Instr.BGEU, untyped, gp)
+      case _ => return None
+    }
+    case OpcodeMap.LOAD => untyped.i.funct3 match {
+      case 0 => i(RV32Instr.LB, untyped, gp)
+      case 1 => i(RV32Instr.LH, untyped, gp)
+      case 2 => i(RV32Instr.LW, untyped, gp)
+      case 4 => i(RV32Instr.LBU, untyped, gp)
+      case 5 => i(RV32Instr.LHU, untyped, gp)
+      case 6 => i(RV64Instr.LWU, untyped, gp)
+      case 3 => i(RV64Instr.LD, untyped, gp)
+      case _ => return None
+    }
+    case OpcodeMap.STORE => untyped.s.funct3 match {
+      case 0 => s(RV32Instr.SB, untyped, gp)
+      case 1 => s(RV32Instr.SH, untyped, gp)
+      case 2 => s(RV32Instr.SW, untyped, gp)
+      case 3 => s(RV64Instr.SD, untyped, gp)
+      case _ => return None
+    }
     case _ => return None
   })
 }
