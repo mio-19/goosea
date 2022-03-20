@@ -77,9 +77,13 @@ private def s[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: In
   val imm = imm11_5.bitor(imm4_0)
   opcode(reg(st.rs1), reg(st.rs2), Imm32_11_0.from(imm))
 }
-private def rshamt64[T](opcode:(Reg, Reg, U8) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def rshamt32[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val rt = untyped.rshamt32
+  opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
+}
+private def rshamt64[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val rt = untyped.rshamt64
-  opcode(reg(rt.rd),reg(rt.rs1),U8(rt.shamt))
+  opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
 }
 
 def decode(untyped: Bytecode): Option[Instr] = {
@@ -116,12 +120,12 @@ def decode(untyped: Bytecode): Option[Instr] = {
       case _ => return None
     }
     case OpcodeMap.OP_IMM => untyped.i.funct3 match {
-      case 0 => i(RV32Instr.ADDI,untyped,gp)
-      case 2 => i(RV32Instr.SLTI,untyped,gp)
-      case 3 => i(RV32Instr.SLTIU,untyped,gp)
-      case 4 => i(RV32Instr.XORI,untyped,gp)
-      case 6 => i(RV32Instr.ORI,untyped,gp)
-      case 7 => i(RV32Instr.ANDI,untyped,gp)
+      case 0 => i(RV32Instr.ADDI, untyped, gp)
+      case 2 => i(RV32Instr.SLTI, untyped, gp)
+      case 3 => i(RV32Instr.SLTIU, untyped, gp)
+      case 4 => i(RV32Instr.XORI, untyped, gp)
+      case 6 => i(RV32Instr.ORI, untyped, gp)
+      case 7 => i(RV32Instr.ANDI, untyped, gp)
       // RV64's SLLI, SRLI, SRAI have a 1-bit-more `shamt` field compared to RV32:
       // The `shamt` field in RV32: 5 bits
       // The `shamt` field in RV64: 6 bits
@@ -134,8 +138,13 @@ def decode(untyped: Bytecode): Option[Instr] = {
       case _ => return None
     }
     case OpcodeMap.OP_IMM_32 => untyped.i.funct3 match {
-      case 0 => i(RV64Instr.ADDIW,untyped,gp)
-      case 1=> ???
+      case 0 => i(RV64Instr.ADDIW, untyped, gp)
+      case 1 => rshamt32(RV64Instr.SLLIW, untyped, gp)
+      case 5 => untyped.rshamt32.funct7 match {
+        case 0 => rshamt32(RV64Instr.SRLIW, untyped, gp)
+        case 32 => rshamt32(RV64Instr.SRAIW, untyped, gp)
+        case _ => return None
+      }
       case _ => return None
     }
     case _ => return None
