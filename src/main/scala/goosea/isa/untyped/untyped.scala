@@ -27,6 +27,7 @@ implicit class Bytecode(instr: U32) {
   def u = unwarp(utypeCodec.decode(instr))
 
   def s = unwarp(stypeCodec.decode(instr))
+  def r = unwarp(rtypeCodec.decode(instr))
 
   def rshamt64 = unwarp(rshamt64typeCodec.decode(instr))
 

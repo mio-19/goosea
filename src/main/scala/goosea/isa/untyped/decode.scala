@@ -85,6 +85,10 @@ private def rshamt64[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int
   val rt = untyped.rshamt64
   opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
 }
+private def r[T](opcode:( Reg, Reg, Reg)=>T, untyped: Bytecode, reg: Int => Reg): T = {
+  val rt = untyped.r
+  opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2))
+}
 
 def decode(untyped: Bytecode): Option[Instr] = {
   val opcode = untyped.opcode >> 2 // stripping away `inst[1:0]=11`
@@ -146,6 +150,50 @@ def decode(untyped: Bytecode): Option[Instr] = {
         case _ => return None
       }
       case _ => return None
+    }
+    case OpcodeMap.OP => untyped.r.funct3 match {
+      case 0 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.ADD, untyped, gp)
+        case 32 => r(RV32Instr.SUB, untyped, gp)
+        case 1 => r(RV32Instr.MUL, untyped, gp)
+        case _ => return None
+      }
+      case 1 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.SLL, untyped, gp)
+        case 1 => r(RV32Instr.MULH, untyped, gp)
+        case _ => return None
+      }
+      case 2 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.SLT, untyped, gp)
+        case 1 => r(RV32Instr.MULHSU, untyped, gp)
+        case _ => return None
+      }
+      case 3 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.SLTU, untyped, gp)
+        case 1 => r(RV32Instr.MULHU, untyped, gp)
+        case _ => return None
+      }
+      case 4 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.XOR, untyped, gp)
+        case 1 => r(RV32Instr.DIV, untyped, gp)
+        case _ => return None
+      }
+      case 5 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.SRL, untyped, gp)
+        case 32 => r(RV32Instr.SRA, untyped, gp)
+        case 1 => r(RV32Instr.DIVU, untyped, gp)
+        case _ => return None
+      }
+      case 6 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.OR, untyped, gp)
+        case 1 => r(RV32Instr.REM, untyped, gp)
+        case _ => return None
+      }
+      case 7 => untyped.r.funct7 match {
+        case 0 => r(RV32Instr.AND, untyped, gp)
+        case 1 => r(RV32Instr.REMU, untyped, gp)
+        case _ => return None
+      }
     }
     case _ => return None
   })
