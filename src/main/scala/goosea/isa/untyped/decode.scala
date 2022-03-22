@@ -93,6 +93,18 @@ private def fence[T](opcode: (rd: Reg, rs1: Reg, succ: Fin16, pred: Fin16, fm: F
   val ft = untyped.fence
   opcode(reg(ft.rd), reg(ft.rs1), Fin16(ft.succ), Fin16(ft.pred), Fin16(ft.fm))
 }
+private def r_no_rd[T](opcode: (Reg, Reg) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val rt = untyped.r
+  opcode(reg(rt.rs1), reg(rt.rs2))
+}
+private def zicsr_rs1[T](opcode: (rd: Reg, rs1: Reg, csr: Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val it = untyped.i
+  opcode(reg(it.rd), reg(it.rs1), Imm32_11_0(it.imm11_0))
+}
+private def zicsr_uimm[T](opcode:(rd: Reg, i: Imm32_4_0, csr: Imm32_11_0)=>T,untyped: Bytecode, reg: Int => Reg):T = {
+  val it = untyped.i
+  opcode(reg(it.rd),Imm32_4_0(it.rs1),Imm32_11_0(it.imm11_0))
+}
 
 def decode(untyped: Bytecode): Option[Instr] = {
   val opcode = untyped.opcode >> 2 // stripping away `inst[1:0]=11`
@@ -222,13 +234,13 @@ def decode(untyped: Bytecode): Option[Instr] = {
         case 0x100000FL => RV32Instr.PAUSE
         case _ => fence(RV32Instr.FENCE, untyped, gp)
       }
-      case 1 => i(RV64Instr.FENCE_I,untyped,gp)
+      case 1 => i(RV64Instr.FENCE_I, untyped, gp)
       case _ => return None
     }
     case OpcodeMap.SYSTEM => untyped.i.funct3 match {
       case 0 => untyped.i.imm11_0 match {
-        case 0 =>  RV32Instr.ECALL
-        case  1 => RV32Instr.EBREAK
+        case 0 => RV32Instr.ECALL
+        case 1 => RV32Instr.EBREAK
         case _ => untyped.r.funct7 match {
           case 8 => untyped.r.rs2 match {
             case 2 => RV64Instr.SRET
@@ -236,9 +248,23 @@ def decode(untyped: Bytecode): Option[Instr] = {
             case _ => return None
           }
           case 24 => RV64Instr.MRET
-          case _ => ???
+          case 9 => r_no_rd(RV64Instr.SFENCE_VMA, untyped, gp)
+          case 0xB => r_no_rd(RV64Instr.SINVAL_VMA, untyped, gp)
+          case 0xC => untyped.r.rs2 match {
+            case 0 => RV64Instr.SFENCE_W_INVAL
+            case 1 => RV64Instr.SFENCE_INVAL_IR
+            case _ => return None
+          }
+          case _ => throw new UnsupportedOperationException("Hypervisor")
         }
       }
+      case 1 => zicsr_rs1(RV64Instr.CSRRW, untyped, gp)
+      case 2 => zicsr_rs1(RV64Instr.CSRRS, untyped, gp)
+      case 3 => zicsr_rs1(RV64Instr.CSRRC, untyped, gp)
+      case 5 => zicsr_uimm(RV64Instr.CSRRWI, untyped, gp)
+      case 6 => zicsr_uimm(RV64Instr.CSRRSI, untyped, gp)
+      case 7 => zicsr_uimm(RV64Instr.CSRRCI, untyped, gp)
+      case _ => return None
     }
     case _ => return None
   })
