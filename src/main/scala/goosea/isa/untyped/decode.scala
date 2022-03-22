@@ -85,7 +85,7 @@ private def rshamt64[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int
   val rt = untyped.rshamt64
   opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
 }
-private def r[T](opcode:( Reg, Reg, Reg)=>T, untyped: Bytecode, reg: Int => Reg): T = {
+private def r[T](opcode: (Reg, Reg, Reg) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val rt = untyped.r
   opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2))
 }
@@ -193,6 +193,30 @@ def decode(untyped: Bytecode): Option[Instr] = {
         case 0 => r(RV32Instr.AND, untyped, gp)
         case 1 => r(RV32Instr.REMU, untyped, gp)
         case _ => return None
+      }
+    }
+    case OpcodeMap.OP_32 => untyped.r.funct3 match {
+      case 0 => untyped.r.funct7 match {
+        case 0 => r(RV64Instr.ADDW, untyped, gp)
+        case 32 => r(RV64Instr.SUBW, untyped, gp)
+        case 1 => r(RV64Instr.MULW, untyped, gp)
+      }
+      case 1 => r(RV64Instr.SLLW, untyped, gp)
+      case 4 => r(RV64Instr.DIVW, untyped, gp)
+      case 5 => untyped.r.funct7 match {
+        case 0 => r(RV64Instr.SRLW, untyped, gp)
+        case 32 => r(RV64Instr.SRLW, untyped, gp)
+        case 1 => r(RV64Instr.DIVUW, untyped, gp)
+      }
+      case 6 => r(RV64Instr.REMW, untyped, gp)
+      case 7 => r(RV64Instr.REMUW, untyped, gp)
+      case _ => return None
+    }
+    case OpcodeMap.MISC_MEM => untyped.i.funct3 match {
+      case 0 => untyped.toU32.toLong match {
+        case 0x8330000FL => RV32Instr.FENCE_TSO
+        case 0x100000FL => RV32Instr.PAUSE
+        case _ => ???
       }
     }
     case _ => return None
