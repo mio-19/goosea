@@ -101,9 +101,18 @@ private def zicsr_rs1[T](opcode: (rd: Reg, rs1: Reg, csr: Imm32_11_0) => T, unty
   val it = untyped.i
   opcode(reg(it.rd), reg(it.rs1), Imm32_11_0(it.imm11_0))
 }
-private def zicsr_uimm[T](opcode:(rd: Reg, i: Imm32_4_0, csr: Imm32_11_0)=>T,untyped: Bytecode, reg: Int => Reg):T = {
+private def zicsr_uimm[T](opcode: (rd: Reg, i: Imm32_4_0, csr: Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val it = untyped.i
-  opcode(reg(it.rd),Imm32_4_0(it.rs1),Imm32_11_0(it.imm11_0))
+  opcode(reg(it.rd), Imm32_4_0(it.rs1), Imm32_11_0(it.imm11_0))
+}
+private def ra[T](opcode: (rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val rt = untyped.ra
+  opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2), AQRL(rt.aq, rt.rl))
+}
+private def ra_only_rs1[T](opcode: (rd: Reg, rs1: Reg, flag: AQRL) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val rt = untyped.ra
+  if (rt.rs2 != 0) throw new IllegalArgumentException()
+  opcode(reg(rt.rd), reg(rt.rs1), AQRL(rt.aq, rt.rl))
 }
 
 def decode(untyped: Bytecode): Option[Instr] = {
@@ -266,6 +275,44 @@ def decode(untyped: Bytecode): Option[Instr] = {
       case 7 => zicsr_uimm(RV64Instr.CSRRCI, untyped, gp)
       case _ => return None
     }
+    case OpcodeMap.AMO => untyped.ra.funct3 match {
+      case 2 => untyped.ra.funct5 match {
+        case 2 => ra_only_rs1(RV32Instr.LR_W, untyped, gp)
+        case 3 => ra(RV32Instr.SC_W, untyped, gp)
+        case 1 => ra(RV32Instr.AMOSWAP_W, untyped, gp)
+        case 0 => ra(RV32Instr.AMOADD_W, untyped, gp)
+        case 4 => ra(RV32Instr.AMOXOR_W, untyped, gp)
+        case 12 => ra(RV32Instr.AMOAND_W, untyped, gp)
+        case 8 => ra(RV32Instr.AMOOR_W, untyped, gp)
+        case 16 => ra(RV32Instr.AMOMIN_W, untyped, gp)
+        case 20 => ra(RV32Instr.AMOMAX_W, untyped, gp)
+        case 24 => ra(RV32Instr.AMOMINU_W, untyped, gp)
+        case 28 => ra(RV32Instr.AMOMAXU_W, untyped, gp)
+        case _ => return None
+      }
+      case 3 => untyped.ra.funct5 match {
+        case 2 => ra_only_rs1(RV64Instr.LR_D, untyped, gp)
+        case 3 => ra(RV64Instr.SC_D, untyped, gp)
+        case 1 => ra(RV64Instr.AMOSWAP_D, untyped, gp)
+        case 0 => ra(RV64Instr.AMOADD_D, untyped, gp)
+        case 4 => ra(RV64Instr.AMOXOR_D, untyped, gp)
+        case 12 => ra(RV64Instr.AMOAND_D, untyped, gp)
+        case 8 => ra(RV64Instr.AMOOR_D, untyped, gp)
+        case 16 => ra(RV64Instr.AMOMIN_D, untyped, gp)
+        case 20 => ra(RV64Instr.AMOMAX_D, untyped, gp)
+        case 24 => ra(RV64Instr.AMOMINU_D, untyped, gp)
+        case 28 => ra(RV64Instr.AMOMAXU_D, untyped, gp)
+        case _ => return None
+      }
+      case _ => return None
+    }
+    case OpcodeMap._custom_0 |
+         OpcodeMap._custom_1 |
+         OpcodeMap._custom_2_or_rv128 |
+         OpcodeMap._custom_3_or_rv128 |
+         OpcodeMap._reversed_0 |
+         OpcodeMap._reversed_1 |
+         OpcodeMap._reversed_2 => return None
     case _ => return None
   })
 }
