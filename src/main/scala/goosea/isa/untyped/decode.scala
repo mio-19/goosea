@@ -89,6 +89,10 @@ private def r[T](opcode: (Reg, Reg, Reg) => T, untyped: Bytecode, reg: Int => Re
   val rt = untyped.r
   opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2))
 }
+private def fence[T](opcode: (dest: Reg, src1: Reg, succ: Fin16, pred: Fin16, fm: Fin16) => T, untyped: Bytecode, reg: Int => Reg): T = {
+  val ft = untyped.fence
+  opcode(reg(ft.rd), reg(ft.rs1), Fin16(ft.succ), Fin16(ft.pred), Fin16(ft.fm))
+}
 
 def decode(untyped: Bytecode): Option[Instr] = {
   val opcode = untyped.opcode >> 2 // stripping away `inst[1:0]=11`
@@ -216,7 +220,24 @@ def decode(untyped: Bytecode): Option[Instr] = {
       case 0 => untyped.toU32.toLong match {
         case 0x8330000FL => RV32Instr.FENCE_TSO
         case 0x100000FL => RV32Instr.PAUSE
-        case _ => ???
+        case _ => fence(RV32Instr.FENCE, untyped, gp)
+      }
+      case 1 => i(RV64Instr.FENCE_I,untyped,gp)
+      case _ => return None
+    }
+    case OpcodeMap.SYSTEM => untyped.i.funct3 match {
+      case 0 => untyped.i.imm11_0 match {
+        case 0 =>  RV32Instr.ECALL
+        case  1 => RV32Instr.EBREAK
+        case _ => untyped.r.funct7 match {
+          case 8 => untyped.r.rs2 match {
+            case 2 => RV64Instr.SRET
+            case 5 => RV64Instr.WFI
+            case _ => return None
+          }
+          case 24 => RV64Instr.MRET
+          case _ => ???
+        }
       }
     }
     case _ => return None

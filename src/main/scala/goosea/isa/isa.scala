@@ -208,6 +208,21 @@ object RV64Instr {
 
   // RV32/64 Zifencei
   final case class FENCE_I(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
+
+  // Privileged
+  case object SRET extends RV64Instr
+
+  case object MRET extends RV64Instr
+
+  case object WFI extends RV64Instr
+
+  final case class SFENCE_VMA(src1: Reg, src2: Reg) extends RV64Instr
+
+  final case class SINVAL_VMA(src1: Reg, src2: Reg) extends RV64Instr
+
+  case object SFENCE_W_INVAL extends RV64Instr
+
+  case object SFENCE_INVAL_IR extends RV64Instr
 }
 
 sealed trait RV32Instr extends Instr

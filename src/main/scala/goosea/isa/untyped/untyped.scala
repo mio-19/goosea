@@ -27,11 +27,14 @@ implicit class Bytecode(instr: U32) {
   def u = unwarp(utypeCodec.decode(instr))
 
   def s = unwarp(stypeCodec.decode(instr))
+
   def r = unwarp(rtypeCodec.decode(instr))
 
   def rshamt64 = unwarp(rshamt64typeCodec.decode(instr))
 
   def rshamt32 = unwarp(rshamt32typeCodec.decode(instr))
+
+  def fence = unwarp(fencetypeCodec.decode(instr))
 }
 
 implicit def bytecode2u32(x: Bytecode): U32 = x.toU32
@@ -82,7 +85,7 @@ implicit val rshamt64typeCodec: Codec[RShamt64Type] = (("opcode" | uint(7)) :: (
 
 final case class FenceType(opcode: Int, rd: Int, funct3: Int, rs1: Int, succ: Int, pred: Int, fm: Int) extends UntypedInstr
 
-implicit val fencetyoeCodec: Codec[FenceType] = (("opcode" | uint(7)) :: ("rd" | uint(5)) :: ("funct3" | uint(3)) :: ("rs1" | uint(5)) :: ("succ" | uint(4)) :: ("pred" | uint(4)) :: ("fm" | uint(4))).as[FenceType]
+implicit val fencetypeCodec: Codec[FenceType] = (("opcode" | uint(7)) :: ("rd" | uint(5)) :: ("funct3" | uint(3)) :: ("rs1" | uint(5)) :: ("succ" | uint(4)) :: ("pred" | uint(4)) :: ("fm" | uint(4))).as[FenceType]
 
 final case class OpcodePeek(opcode: Int, dummy: Int) extends UntypedInstr
 
