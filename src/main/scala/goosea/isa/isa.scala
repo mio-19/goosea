@@ -107,107 +107,107 @@ sealed trait RV64Instr extends Instr
 
 object RV64Instr {
   // RV64I
-  final case class LWU(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class LWU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
 
-  final case class LD(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class LD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
 
-  final case class SD(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class SD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
 
-  final case class SLLI(dest: Reg, src1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SLLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class SRLI(dest: Reg, src1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SRLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class SRAI(dest: Reg, src1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SRAI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class ADDIW(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class ADDIW(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
 
-  final case class SLLIW(dest: Reg, src1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SLLIW(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class SRLIW(dest: Reg, src1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SRLIW(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class SRAIW(dest: Reg, src1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SRAIW(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class ADDW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class ADDW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class SUBW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class SUBW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class SLLW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class SLLW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class SRLW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class SRLW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class SRAW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class SRAW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
   // RV64M
-  final case class MULW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class MULW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class DIVW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class DIVW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class DIVUW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class DIVUW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class REMW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class REMW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class REMUW(dest: Reg, src1: Reg, src2: Reg) extends RV64Instr
+  final case class REMUW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
   // RV64A
-  final case class LR_D(dest: Reg, src1: Reg, flag: AQRL) extends RV64Instr
+  final case class LR_D(rd: Reg, rs1: Reg, flag: AQRL) extends RV64Instr
 
-  final case class SC_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class SC_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOSWAP_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOSWAP_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOADD_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOADD_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOXOR_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOXOR_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOAND_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOAND_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOOR_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOOR_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOMIN_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMIN_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOMAX_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMAX_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOMINU_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMINU_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
-  final case class AMOMAXU_D(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMAXU_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
 
   // RV64F
-  final case class FCVT_L_S(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_L_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FCVT_LU_S(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_LU_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FCVT_S_L(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_S_L(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FCVT_S_LU(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_S_LU(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
   // RV64D
-  final case class FCVT_L_D(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_L_D(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FCVT_LU_D(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_LU_D(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FMV_X_D(dest: Reg, src1: Reg) extends RV64Instr
+  final case class FMV_X_D(rd: Reg, rs1: Reg) extends RV64Instr
 
-  final case class FCVT_D_L(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_D_L(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FCVT_D_LU(dest: Reg, src1: Reg, mode: RoundingMode) extends RV64Instr
+  final case class FCVT_D_LU(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
 
-  final case class FMV_D_X(dest: Reg, src1: Reg) extends RV64Instr
+  final case class FMV_D_X(rd: Reg, rs1: Reg) extends RV64Instr
 
   // RV32/64 Zicsr
-  final case class CSRRW(dest: Reg, src1: Reg, csr: Imm32_11_0) extends RV64Instr
+  final case class CSRRW(rd: Reg, rs1: Reg, csr: Imm32_11_0) extends RV64Instr
 
-  final case class CSRRS(dest: Reg, src1: Reg, csr: Imm32_11_0) extends RV64Instr
+  final case class CSRRS(rd: Reg, rs1: Reg, csr: Imm32_11_0) extends RV64Instr
 
-  final case class CSRRC(dest: Reg, src1: Reg, csr: Imm32_11_0) extends RV64Instr
+  final case class CSRRC(rd: Reg, rs1: Reg, csr: Imm32_11_0) extends RV64Instr
 
-  final case class CSRRWI(dest: Reg, i: Imm32_4_0, csr: Imm32_11_0) extends RV64Instr
+  final case class CSRRWI(rd: Reg, i: Imm32_4_0, csr: Imm32_11_0) extends RV64Instr
 
-  final case class CSRRSI(dest: Reg, i: Imm32_4_0, csr: Imm32_11_0) extends RV64Instr
+  final case class CSRRSI(rd: Reg, i: Imm32_4_0, csr: Imm32_11_0) extends RV64Instr
 
-  final case class CSRRCI(dest: Reg, i: Imm32_4_0, csr: Imm32_11_0) extends RV64Instr
+  final case class CSRRCI(rd: Reg, i: Imm32_4_0, csr: Imm32_11_0) extends RV64Instr
 
   // RV32/64 Zifencei
-  final case class FENCE_I(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class FENCE_I(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
 
   // Privileged
   case object SRET extends RV64Instr
@@ -216,9 +216,9 @@ object RV64Instr {
 
   case object WFI extends RV64Instr
 
-  final case class SFENCE_VMA(src1: Reg, src2: Reg) extends RV64Instr
+  final case class SFENCE_VMA(rs1: Reg, rs2: Reg) extends RV64Instr
 
-  final case class SINVAL_VMA(src1: Reg, src2: Reg) extends RV64Instr
+  final case class SINVAL_VMA(rs1: Reg, rs2: Reg) extends RV64Instr
 
   case object SFENCE_W_INVAL extends RV64Instr
 
@@ -229,81 +229,81 @@ sealed trait RV32Instr extends Instr
 
 object RV32Instr {
   // RV32I
-  final case class LUI(dest: Reg, i: Imm32_31_12) extends RV32Instr
+  final case class LUI(rd: Reg, i: Imm32_31_12) extends RV32Instr
 
-  final case class AUIPC(dest: Reg, i: Imm32_31_12) extends RV32Instr
+  final case class AUIPC(rd: Reg, i: Imm32_31_12) extends RV32Instr
 
-  final case class JAL(dest: Reg, i: Imm32_20_1) extends RV32Instr
+  final case class JAL(rd: Reg, i: Imm32_20_1) extends RV32Instr
 
-  final case class JALR(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class JALR(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class BEQ(src1: Reg, src2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BEQ(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
 
-  final case class BNE(src1: Reg, src2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BNE(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
 
-  final case class BLT(src1: Reg, src2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BLT(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
 
-  final case class BGE(src1: Reg, src2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BGE(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
 
-  final case class BLTU(src1: Reg, src2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BLTU(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
 
-  final case class BGEU(src1: Reg, src2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BGEU(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
 
-  final case class LB(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LB(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class LH(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LH(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class LW(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LW(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class LBU(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LBU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class LHU(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LHU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class SB(src1: Reg, src2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SB(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class SH(src1: Reg, src2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SH(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class SW(src1: Reg, src2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SW(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class ADDI(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class ADDI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class SLTI(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SLTI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class SLTIU(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SLTIU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class XORI(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class XORI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class ORI(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class ORI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class ANDI(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class ANDI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class SLLI(dest: Reg, src1: Reg, shiftAmount: U8) extends RV32Instr
+  final case class SLLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV32Instr
 
-  final case class SRLI(dest: Reg, src1: Reg, shiftAmount: U8) extends RV32Instr
+  final case class SRLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV32Instr
 
-  final case class SRAI(dest: Reg, src1: Reg, shiftAmount: U8) extends RV32Instr
+  final case class SRAI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV32Instr
 
-  final case class ADD(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class ADD(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class SUB(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class SUB(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class SLL(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class SLL(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class SLT(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class SLT(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class SLTU(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class SLTU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class XOR(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class XOR(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class SRL(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class SRL(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class SRA(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class SRA(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class OR(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class OR(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class AND(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class AND(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FENCE(dest: Reg, src1: Reg, succ: Fin16, pred: Fin16, fm: Fin16) extends RV32Instr
+  final case class FENCE(rd: Reg, rs1: Reg, succ: Fin16, pred: Fin16, fm: Fin16) extends RV32Instr
 
   case object FENCE_TSO extends RV32Instr
 
@@ -314,148 +314,148 @@ object RV32Instr {
   case object EBREAK extends RV32Instr
 
   // RV32M
-  final case class MUL(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class MUL(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class MULH(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class MULH(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class MULHSU(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class MULHSU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class MULHU(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class MULHU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class DIV(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class DIV(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class DIVU(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class DIVU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class REM(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class REM(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class REMU(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class REMU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
   // RV32A
-  final case class LR_W(dest: Reg, src1: Reg, flag: AQRL) extends RV32Instr
+  final case class LR_W(rd: Reg, rs1: Reg, flag: AQRL) extends RV32Instr
 
-  final case class SC_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class SC_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOSWAP_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOSWAP_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOADD_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOADD_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOXOR_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOXOR_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOAND_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOAND_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOOR_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOOR_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOMIN_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMIN_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOMAX_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMAX_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOMINU_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMINU_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
-  final case class AMOMAXU_W(dest: Reg, src1: Reg, src2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMAXU_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
   // RV32F
-  final case class FLW(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class FLW(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class FSW(src1: Reg, src2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class FSW(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class FMADD_S(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FMADD_S(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FMSUB_S(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FMSUB_S(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FNMSUB_S(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FNMSUB_S(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FNMADD_S(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FNMADD_S(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FADD_S(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FADD_S(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FSUB_S(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FSUB_S(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FMUL_S(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FMUL_S(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FDIV_S(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FDIV_S(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FSQRT_S(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FSQRT_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FSGNJ_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FSGNJ_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FSGNJN_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FSGNJN_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FSGNJX_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FSGNJX_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FMIN_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FMIN_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FMAX_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FMAX_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FCVT_W_S(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_W_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FCVT_WU_S(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_WU_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FMV_X_W(dest: Reg, src1: Reg) extends RV32Instr
+  final case class FMV_X_W(rd: Reg, rs1: Reg) extends RV32Instr
 
-  final case class FEQ_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FEQ_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FLT_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FLT_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FLE_S(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FLE_S(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FCLASS_S(dest: Reg, src1: Reg) extends RV32Instr
+  final case class FCLASS_S(rd: Reg, rs1: Reg) extends RV32Instr
 
-  final case class FCVT_S_W(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_S_W(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FCVT_S_WU(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_S_WU(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FMV_W_X(dest: Reg, src1: Reg) extends RV32Instr
+  final case class FMV_W_X(rd: Reg, rs1: Reg) extends RV32Instr
 
   // RV32D
-  final case class FLD(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class FLD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class FSD(dest: Reg, src1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class FSD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class FMADD_D(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FMADD_D(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FMSUB_D(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FMSUB_D(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FNMSUB_D(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FNMSUB_D(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FNMADD_D(dest: Reg, src1: Reg, src2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FNMADD_D(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FADD_D(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FADD_D(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FSUB_D(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FSUB_D(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FMUL_D(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FMUL_D(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FDIV_D(dest: Reg, src1: Reg, src2: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FDIV_D(rd: Reg, rs1: Reg, rs2: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FSQRT_D(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FSQRT_D(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FSGNJ_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FSGNJ_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FSGNJN_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FSGNJN_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FSGNJX_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FSGNJX_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FMIN_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FMIN_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FMAX_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FMAX_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FCVT_S_D(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_S_D(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FCVT_D_S(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_D_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FEQ_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FEQ_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FLT_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FLT_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FLE_D(dest: Reg, src1: Reg, src2: Reg) extends RV32Instr
+  final case class FLE_D(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class FCLASS_D(dest: Reg, src1: Reg) extends RV32Instr
+  final case class FCLASS_D(rd: Reg, rs1: Reg) extends RV32Instr
 
-  final case class FCVT_W_D(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_W_D(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FCVT_WU_D(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_WU_D(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FCVT_D_W(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_D_W(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
-  final case class FCVT_D_WU(dest: Reg, src1: Reg, mode: RoundingMode) extends RV32Instr
+  final case class FCVT_D_WU(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 }

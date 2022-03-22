@@ -89,7 +89,7 @@ private def r[T](opcode: (Reg, Reg, Reg) => T, untyped: Bytecode, reg: Int => Re
   val rt = untyped.r
   opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2))
 }
-private def fence[T](opcode: (dest: Reg, src1: Reg, succ: Fin16, pred: Fin16, fm: Fin16) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def fence[T](opcode: (rd: Reg, rs1: Reg, succ: Fin16, pred: Fin16, fm: Fin16) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val ft = untyped.fence
   opcode(reg(ft.rd), reg(ft.rs1), Fin16(ft.succ), Fin16(ft.pred), Fin16(ft.fm))
 }
