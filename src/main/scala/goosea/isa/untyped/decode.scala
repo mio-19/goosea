@@ -61,6 +61,10 @@ private def i[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: In
   val it = untyped.i
   opcode(reg(it.rd), reg(it.rs1), Imm32_11_0(it.imm11_0))
 }
+private def i_load_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, freg: Int => Reg,greg:Int=>Reg): T = {
+  val it = untyped.i
+  opcode(freg(it.rd), greg(it.rs1), Imm32_11_0(it.imm11_0))
+}
 private def b[T](opcode: (Reg, Reg, Imm32_12_1) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val bt = untyped.b
   val imm12 = Imm32_12_12(bt.imm12)
@@ -76,6 +80,13 @@ private def s[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: In
   val imm4_0 = Imm32_4_0(st.imm4_0)
   val imm = imm11_5.bitor(imm4_0)
   opcode(reg(st.rs1), reg(st.rs2), Imm32_11_0.from(imm))
+}
+private def s_store_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, freg: Int => Reg,greg: Int => Reg): T = {
+  val st = untyped.s
+  val imm11_5 = Imm32_11_5(st.imm11_5)
+  val imm4_0 = Imm32_4_0(st.imm4_0)
+  val imm = imm11_5.bitor(imm4_0)
+  opcode(greg(st.rs1), freg(st.rs2), Imm32_11_0.from(imm))
 }
 private def rshamt32[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int => Reg): T = {
   val rt = untyped.rshamt32
