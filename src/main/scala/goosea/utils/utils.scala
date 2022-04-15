@@ -33,14 +33,13 @@ implicit class U16(i: Int) {
   }
 
   def toInt: Int = i
-
-  def |(other: U16): U16 = this.toInt | other.toInt
-
-  def >>(other: U16): U16 = this.toInt >> other.toInt
 }
 
+
 implicit def intToU16(x: Int): U16 = U16(x)
-implicit def u16ToInt(x: U32): Int = x.toInt
+implicit def u16ToInt(x: U16): Int = x.toInt
+implicit def u16ToBitVector(x: U16): BitVector = BitVector.fromInt(x, 16)
+
 
 implicit class U32(i: Long) {
   if (!(0 <= i && i < 4294967296L)) {

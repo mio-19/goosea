@@ -8,7 +8,7 @@ import scodec.codecs.*
 
 import scala.language.implicitConversions
 
-private def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
+def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
   val v = x.require
   if (v.remainder.isEmpty) v.value else throw new IllegalArgumentException()
 }
