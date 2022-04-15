@@ -1,5 +1,21 @@
 package goosea.isa.compressed
 
+import goosea.utils._
+
+implicit class Bytecode16(repr: U16) {
+  def peek = unwarp(opcodePeek16Codec.decode(repr))
+  def cr = unwarp(crtypeCodec.decode(repr))
+  def ci = unwarp(ciCodec.decode(repr))
+  def css = unwarp(cssCodec.decode(repr))
+  def ciw = unwarp(ciwCodec.decode(repr))
+  def cl = unwarp(clCodec.decode(repr))
+  def cs = unwarp(csCodec.decode(repr))
+  def ca = unwarp(caCodec.decode(repr))
+  def cb = unwarp(cbCodec.decode(repr))
+  def cbi = unwarp(cbiCodec.decode(repr))
+  def cj = unwarp(cjCodec.decode(repr))
+}
+
 final case class CRType(op: Int, rs2: Int, rd_or_rs1: Int, funct4: Int)
 
 implicit val crtypeCodec: Codec[CRType] = (("op"|uint(2))::("rs2"|uint(5))::("rd_or_rs1"|uint(5))::("funct4"|uint(4))).as[CRType]

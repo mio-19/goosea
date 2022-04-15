@@ -13,30 +13,30 @@ private def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
   if (v.remainder.isEmpty) v.value else throw new IllegalArgumentException()
 }
 
-implicit class Bytecode(instr: U32) {
-  def toU32: U32 = instr
+implicit class Bytecode(repr: U32) {
+  def toU32: U32 = repr
 
-  def opcode: Int = unwarp(opcodepeekCodec.decode(instr)).opcode
+  def opcode: Int = unwarp(opcodepeekCodec.decode(repr)).opcode
 
-  def b = unwarp(btypeCodec.decode(instr))
+  def b = unwarp(btypeCodec.decode(repr))
 
-  def i = unwarp(itypeCodec.decode(instr))
+  def i = unwarp(itypeCodec.decode(repr))
 
-  def j = unwarp(jtypeCodec.decode(instr))
+  def j = unwarp(jtypeCodec.decode(repr))
 
-  def u = unwarp(utypeCodec.decode(instr))
+  def u = unwarp(utypeCodec.decode(repr))
 
-  def s = unwarp(stypeCodec.decode(instr))
+  def s = unwarp(stypeCodec.decode(repr))
 
-  def r = unwarp(rtypeCodec.decode(instr))
+  def r = unwarp(rtypeCodec.decode(repr))
 
-  def ra = unwarp(ratypeCodec.decode(instr))
+  def ra = unwarp(ratypeCodec.decode(repr))
 
-  def rshamt64 = unwarp(rshamt64typeCodec.decode(instr))
+  def rshamt64 = unwarp(rshamt64typeCodec.decode(repr))
 
-  def rshamt32 = unwarp(rshamt32typeCodec.decode(instr))
+  def rshamt32 = unwarp(rshamt32typeCodec.decode(repr))
 
-  def fence = unwarp(fencetypeCodec.decode(instr))
+  def fence = unwarp(fencetypeCodec.decode(repr))
 }
 
 implicit def bytecode2u32(x: Bytecode): U32 = x.toU32

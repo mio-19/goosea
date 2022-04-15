@@ -27,6 +27,21 @@ implicit class Fin16(i: Int) {
   }
 }
 
+implicit class U16(i: Int) {
+  if (!(0 <= i && i < 65536)) {
+    throw new IllegalArgumentException()
+  }
+
+  def toInt: Int = i
+
+  def |(other: U16): U16 = this.toInt | other.toInt
+
+  def >>(other: U16): U16 = this.toInt >> other.toInt
+}
+
+implicit def intToU16(x: Int): U16 = U16(x)
+implicit def u16ToInt(x: U32): Int = x.toInt
+
 implicit class U32(i: Long) {
   if (!(0 <= i && i < 4294967296L)) {
     throw new IllegalArgumentException()
