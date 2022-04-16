@@ -33,6 +33,8 @@ implicit class U16(i: Int) {
   }
 
   def toInt: Int = i
+
+  def ==(other: Int): Boolean = i == other
 }
 
 

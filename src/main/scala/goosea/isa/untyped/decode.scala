@@ -47,7 +47,7 @@ private def u[T](opcode: (Reg, Imm32_31_12) => T, untyped: Bytecode, reg: Int =>
   val ut = untyped.u
   opcode(reg(ut.rd), Imm32_31_12(ut.imm31_12))
 }
-private def j[T](opcode: (Reg, Imm32_20_1) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def j[T, R <: Reg](opcode: (R, Imm32_20_1) => T, untyped: Bytecode, reg: Int => R): T = {
   val jt = untyped.j
 
   val imm20 = Imm32_20_20(jt.imm20)
@@ -65,7 +65,7 @@ private def i_load_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode,
   val it = untyped.i
   opcode(freg(it.rd), greg(it.rs1), Imm32_11_0(it.imm11_0))
 }
-private def b[T](opcode: (Reg, Reg, Imm32_12_1) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def b[T, R <: Reg](opcode: (R, R, Imm32_12_1) => T, untyped: Bytecode, reg: Int => R): T = {
   val bt = untyped.b
   val imm12 = Imm32_12_12(bt.imm12)
   val imm10_5 = Imm32_10_5(bt.imm10_5)

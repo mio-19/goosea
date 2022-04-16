@@ -235,21 +235,21 @@ object RV32Instr {
 
   final case class AUIPC(rd: Reg, i: Imm32_31_12) extends RV32Instr
 
-  final case class JAL(rd: Reg, i: Imm32_20_1) extends RV32Instr
+  final case class JAL(rd: Reg.X, i: Imm32_20_1) extends RV32Instr
 
-  final case class JALR(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class JALR(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class BEQ(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BEQ(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
-  final case class BNE(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BNE(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
-  final case class BLT(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BLT(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
-  final case class BGE(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BGE(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
-  final case class BLTU(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BLTU(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
-  final case class BGEU(rs1: Reg, rs2: Reg, i: Imm32_12_1) extends RV32Instr
+  final case class BGEU(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
   final case class LB(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
@@ -411,7 +411,7 @@ object RV32Instr {
   // RV32D
   final case class FLD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class FSD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class FSD(rd: Reg.X, rs1: Reg.F, i: Imm32_11_0) extends RV32Instr
 
   final case class FMADD_D(rd: Reg, rs1: Reg, rs2: Reg, src3: Reg, mode: RoundingMode) extends RV32Instr
 

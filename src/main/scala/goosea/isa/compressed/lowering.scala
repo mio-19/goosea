@@ -2,7 +2,8 @@ package goosea.isa.compressed
 
 import goosea.isa._
 import goosea.utils._
-import goosea.isa.untyped.gp
+import goosea.isa.untyped.{gp, fp}
+import scala.language.implicitConversions
 
 
 def fp_3(reg: Int): Reg.F = if (0 <= reg && reg < 8) Reg.F(reg + 8) else throw new IllegalArgumentException()
@@ -311,7 +312,109 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
       }
       case _ => return None
     }
-    case _ => return None // todo
+    case 2 => untyped.funct3 match {
+      // C.SLLI
+      case 0 if rd_is_0(untyped) => hint
+      case 0 if nzimm_is_0(untyped) => hint
+      case 0 => {
+        val ci = untyped.ci
+        val rd = gp(ci.rd)
+        // shamt[5|4:0] = inst[12|6:2]
+        val shamt = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
+        RV64Instr.SLLI(rd, rd, shamt)
+      }
+      // C.FLDSP for RV32/64, C.LQSP for RV128 (not supported)
+      case 1 => {
+        val ci = untyped.ci
+        val rd = fp(ci.rd)
+        // offset[5|4:3|8:6] = inst[12|6:5|4:2]
+        val offset = ((inst << 4) & 0x1c0) // offset[8:6]
+          | ((inst >> 7) & 0x20) // offset[5]
+          | ((inst >> 2) & 0x18) // offset[4:3]
+        RV32Instr.FLD(rd, Reg.X(2), Imm32_11_0(offset))
+      }
+      // C.LWSP (RES for rd = 0)
+      case 2 if rd_is_0(untyped) => return None // reserved
+      case 2 => {
+        val ci = untyped.ci
+        val rd = gp(ci.rd)
+        // offset[5|4:2|7:6] = inst[12|6:4|3:2]
+        val offset = ((inst << 4) & 0xc0) // offset[7:6]
+          | ((inst >> 7) & 0x20) // offset[5]
+          | ((inst >> 2) & 0x1c) // offset[4:2]
+        RV32Instr.LW(rd, Reg.X(2), Imm32_11_0(offset))
+      }
+      // C.LDSP for RV64/128 (RES for rd = 0), C.FLWSP for RV32 (not supported)
+      case 3 if rd_is_0(untyped) => return None // reserved
+      case 3 => {
+        val ci = untyped.ci
+        val rd = fp(ci.rd)
+        // offset[5|4:3|8:6] = inst[12|6:5|4:2]
+        val offset = ((inst << 4) & 0x1c0) // offset[8:6]
+          | ((inst >> 7) & 0x20) // offset[5]
+          | ((inst >> 2) & 0x18) // offset[4:3]
+        RV64Instr.LD(rd, Reg.X(2), Imm32_11_0(offset))
+      }
+      // C.JR (RES for rs1/rd = 0)
+      case 4 if nzimm_is_0(untyped) && rd_is_0(untyped) => return None // reserved
+      case 4 if nzimm_is_0(untyped) => {
+        val cr = untyped.cr
+        val rs1 = gp(cr.rd_or_rs1)
+        RV32Instr.JALR(Reg.X(0), rs1, Imm32_11_0(0))
+      }
+      // C.MV
+      case 4 if untyped.ci.imm_b1 == 0 && untyped.ci.imm_b5 != 0 && rd_is_0(untyped) => hint
+      case 4 if untyped.ci.imm_b1 == 0 && untyped.ci.imm_b5 != 0 => {
+        val cr = untyped.cr
+        val rd = gp(cr.rd_or_rs1)
+        val rs2 = gp(cr.rs2)
+        RV32Instr.ADD(rd, Reg.X(0), rs2)
+      }
+      // C.EBREAK
+      case 4 if untyped.repr == 0x9002 => RV32Instr.EBREAK
+      // C.JALR
+      case 4 if untyped.ci.imm_b1 == 1 && untyped.ci.imm_b5 == 0 => {
+        val cr = untyped.cr
+        val rs1 = gp(cr.rd_or_rs1)
+        RV32Instr.JALR(Reg.X(1), rs1, Imm32_11_0(0))
+      }
+      // C.ADD
+      case 4 if untyped.ci.imm_b1 == 1 => {
+        val cr = untyped.cr
+        val rd = gp(cr.rd_or_rs1)
+        val rs2 = gp(cr.rs2)
+        RV32Instr.ADD(rd, rd, rs2)
+      }
+      // C.FSDSP for RV32/64, C.SQSP for RV128 (not supported)
+      case 5 => {
+        val css = untyped.css
+        val rs2 = fp(css.rs2)
+        // offset[5:3|8:6] = isnt[12:10|9:7]
+        val offset = ((inst >> 1) & 0x1c0) // offset[8:6]
+          | ((inst >> 7) & 0x38) // offset[5:3]
+        RV32Instr.FSD(Reg.X(2), rs2, Imm32_11_0(offset))
+      }
+      // C.SWSP
+      case 6 => {
+        val css = untyped.css
+        val rs2 = gp(css.rs2)
+        // offset[5:2|7:6] = inst[12:9|8:7]
+        val offset = ((inst >> 1) & 0xc0) // offset[7:6]
+          | ((inst >> 7) & 0x3c) // offset[5:2]
+        RV32Instr.SW(Reg.X(2), rs2, Imm32_11_0(offset))
+      }
+      // C.SDSP for RV64/128, C.FSWSP for RV32 (not supported)
+      case 7 => {
+        val css = untyped.css
+        val rs2 = gp(css.rs2)
+        // offset[5:3|8:6] = isnt[12:10|9:7]
+        val offset = ((inst >> 1) & 0x1c0) // offset[8:6]
+          | ((inst >> 7) & 0x38) // offset[5:3]
+        RV64Instr.SD(Reg.X(2), rs2, Imm32_11_0(offset))
+      }
+      case _ => return None
+    }
+    case _ => return None
   })
 }
 
