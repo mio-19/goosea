@@ -5,8 +5,8 @@ import goosea.utils._
 
 import scala.language.implicitConversions
 
-def fp(reg: Int): Reg = if (0 <= reg && reg < 32) Reg.F(reg) else throw new IllegalArgumentException()
-def gp(reg: Int): Reg = if (0 <= reg && reg < 32) Reg.X(reg) else throw new IllegalArgumentException()
+def fp(reg: Int): Reg.F = if (0 <= reg && reg < 32) Reg.F(reg) else throw new IllegalArgumentException()
+def gp(reg: Int): Reg.X = if (0 <= reg && reg < 32) Reg.X(reg) else throw new IllegalArgumentException()
 
 // Opcode map, with `inst[1:0]=11` stripped away.
 object OpcodeMap {
@@ -57,11 +57,11 @@ private def j[T](opcode: (Reg, Imm32_20_1) => T, untyped: Bytecode, reg: Int => 
   val imm = imm20.bitor(imm19_12).bitor(imm11).bitor(imm10_1)
   opcode(reg(jt.rd), Imm32_20_1.from(imm))
 }
-private def i[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def i[T, R <: Reg](opcode: (R, R, Imm32_11_0) => T, untyped: Bytecode, reg: Int => R): T = {
   val it = untyped.i
   opcode(reg(it.rd), reg(it.rs1), Imm32_11_0(it.imm11_0))
 }
-private def i_load_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, freg: Int => Reg,greg:Int=>Reg): T = {
+private def i_load_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, freg: Int => Reg, greg: Int => Reg): T = {
   val it = untyped.i
   opcode(freg(it.rd), greg(it.rs1), Imm32_11_0(it.imm11_0))
 }
@@ -81,7 +81,7 @@ private def s[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: In
   val imm = imm11_5.bitor(imm4_0)
   opcode(reg(st.rs1), reg(st.rs2), Imm32_11_0.from(imm))
 }
-private def s_store_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, freg: Int => Reg,greg: Int => Reg): T = {
+private def s_store_fp[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, freg: Int => Reg, greg: Int => Reg): T = {
   val st = untyped.s
   val imm11_5 = Imm32_11_5(st.imm11_5)
   val imm4_0 = Imm32_4_0(st.imm4_0)
@@ -96,7 +96,7 @@ private def rshamt64[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int
   val rt = untyped.rshamt64
   opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
 }
-private def r[T](opcode: (Reg, Reg, Reg) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def r[T, R <: Reg](opcode: (R, R, R) => T, untyped: Bytecode, reg: Int => R): T = {
   val rt = untyped.r
   opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2))
 }

@@ -2,6 +2,7 @@ package goosea.isa.compressed
 
 import goosea.isa._
 import goosea.utils._
+import goosea.isa.untyped.gp
 
 
 
@@ -119,6 +120,45 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
       }
       case _ => return None
     }
+    case 1 => untyped.funct3 match {
+      // C.NOP
+      case 0 if rd_is_0(untyped) && nzimm_not_0(untyped) => hint
+      case 0 if rd_is_0(untyped) => NOP
+      // C.ADDI
+      case 0 if nzimm_is_0(untyped) => hint
+      case 0 => {
+        val ci = untyped.ci
+        val rd = gp(ci.rd)
+        // imm[5|4:0] = inst[12|6:2]
+        val imm = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
+        // Sign-extended.
+        val imm1 = (imm & 0x20) == 0 match {
+          case true => imm
+          case false => extendi8(0xc0 | imm)
+        }
+        RV32Instr.ADDI(rd, rd, Imm32_11_0(imm1))
+      }
+
+      // C.ADDIW for RV64/128 (RES for rd = 0), C.JAL for RV32 (not supported)
+      case 1 if rd_is_0(untyped) => return None // reserved
+      case 1 => {
+        val ci = untyped.ci
+        val rd = gp(ci.rd)
+        // imm[5|4:0] = inst[12|6:2]
+        val imm = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
+        // Sign-extended.
+        val imm1 = (imm & 0x20) == 0 match {
+          case true => imm
+          case false => extendi8(0xc0 | imm)
+        }
+        RV64Instr.ADDIW(rd, rd, Imm32_11_0(imm1))
+      }
+    }
     case _ => return None // todo
   })
+}
+
+def extendi8(imm: Int) = {
+  val i8 = (0xc0 | imm)
+  if ((i8 & (1 << 7)) == 0) i8 else i8 | 0xffffff00
 }

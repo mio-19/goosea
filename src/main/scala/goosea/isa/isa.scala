@@ -121,7 +121,7 @@ object RV64Instr {
 
   final case class SRAI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class ADDIW(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class ADDIW(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV64Instr
 
   final case class SLLIW(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
@@ -129,9 +129,9 @@ object RV64Instr {
 
   final case class SRAIW(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
 
-  final case class ADDW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class ADDW(rd: Reg.X, rs1: Reg.X, rs2: Reg) extends RV64Instr
 
-  final case class SUBW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class SUBW(rd: Reg.X, rs1: Reg.X, rs2: Reg) extends RV64Instr
 
   final case class SLLW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
@@ -140,15 +140,15 @@ object RV64Instr {
   final case class SRAW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
 
   // RV64M
-  final case class MULW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class MULW(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV64Instr
 
-  final case class DIVW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class DIVW(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV64Instr
 
-  final case class DIVUW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class DIVUW(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV64Instr
 
-  final case class REMW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class REMW(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV64Instr
 
-  final case class REMUW(rd: Reg, rs1: Reg, rs2: Reg) extends RV64Instr
+  final case class REMUW(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV64Instr
 
   // RV64A
   final case class LR_D(rd: Reg, rs1: Reg, flag: AQRL) extends RV64Instr
