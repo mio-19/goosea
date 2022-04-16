@@ -103,6 +103,8 @@ final case class AQRL(acquire: Boolean, release: Boolean)
 
 sealed trait Instr
 
+case object NOP extends Instr
+
 sealed trait RV64Instr extends Instr
 
 object RV64Instr {

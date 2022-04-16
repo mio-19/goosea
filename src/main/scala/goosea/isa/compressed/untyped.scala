@@ -7,7 +7,9 @@ import scodec.bits.*
 import scodec.codecs.*
 import goosea.isa.untyped._
 
-implicit class Bytecode16(repr: U16) {
+implicit class Bytecode16(val repr: U16) {
+  def opcode = this.peek.op
+  def funct3 = this.peek.funct3
   def peek = unwarp(opcodePeek16Codec.decode(repr))
   def cr = unwarp(crtypeCodec.decode(repr))
   def ci = unwarp(citypeCodec.decode(repr))
@@ -25,8 +27,8 @@ final case class CRType(op: Int, rs2: Int, rd_or_rs1: Int, funct4: Int)
 
 implicit val crtypeCodec: Codec[CRType] = (("op"|uint(2))::("rs2"|uint(5))::("rd_or_rs1"|uint(5))::("funct4"|uint(4))).as[CRType]
 
-final case class CIType(op: Int, imm_b5: Int, rd: Int, imm_b1: Boolean, funct3: Int)
-implicit val citypeCodec: Codec[CIType] = (("op"|uint(2))::("imm_b5"|uint(5))::("rd"|uint(5))::("imm_b1"|bool)::("funct3"|uint(3))).as[CIType]
+final case class CIType(op: Int, imm_b5: Int, rd: Int, imm_b1: Int, funct3: Int)
+implicit val citypeCodec: Codec[CIType] = (("op"|uint(2))::("imm_b5"|uint(5))::("rd"|uint(5))::("imm_b1"|uint(1))::("funct3"|uint(3))).as[CIType]
 
 final case class CSSType(op: Int, rs2: Int, imm_b6: Int, funct3: Int)
 implicit val csstypeCodec: Codec[CSSType] = (("op"|uint(2))::("rs2"|uint(5))::("imm_b6"|uint(6))::("funct3"|uint(3))).as[CSSType]
