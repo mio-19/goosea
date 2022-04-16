@@ -53,6 +53,10 @@ implicit class U32(i: Long) {
   def >>(other: U32): U32 = this.toLong >> other.toLong
 }
 
+object U32 {
+  def apply(x: Int): U32 = new U32(x.toLong)
+}
+
 implicit def intToU32(x: Int): U32 = U32(x.toLong)
 implicit def u32ToLong(x: U32): Long = x.toLong
 implicit def u32ToBitVector(x: U32): BitVector = BitVector.fromLong(x, 32)

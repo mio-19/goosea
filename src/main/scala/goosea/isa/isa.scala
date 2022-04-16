@@ -267,17 +267,17 @@ object RV32Instr {
 
   final case class SW(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class ADDI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class ADDI(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
   final case class SLTI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
   final case class SLTIU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
 
-  final case class XORI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class XORI(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class ORI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class ORI(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class ANDI(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class ANDI(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
   final case class SLLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV32Instr
 
@@ -285,17 +285,17 @@ object RV32Instr {
 
   final case class SRAI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV32Instr
 
-  final case class ADD(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
+  final case class ADD(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV32Instr
 
-  final case class SUB(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
+  final case class SUB(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV32Instr
 
-  final case class SLL(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
+  final case class SLL(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV32Instr
 
   final case class SLT(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
   final case class SLTU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
-  final case class XOR(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
+  final case class XOR(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV32Instr
 
   final case class SRL(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
