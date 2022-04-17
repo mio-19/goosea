@@ -26,4 +26,5 @@ final class Regs(var x: Array[U64], var csr: U64, var pc: U64) {
 
 object Regs {
   def apply(pc: U64): Regs = new Regs(new Array[U64](32), 0, pc)
+  def apply():Regs = Regs(0)
 }
