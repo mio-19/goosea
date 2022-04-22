@@ -8,7 +8,7 @@ import goosea.mem.*
 
 final case class Fetch(pc: U64, bytecode: Bytecode, compressed: Bytecode16)
 
-final class RV64CPU(regs: Regs = Regs(), mem: Mem = Mem(), journal: Journal = Journal()) {
+final class RV64CPU(regs: Regs = Regs(), bus: Bus = Bus(), journal: Journal = Journal()) {
   def readReg(reg: Reg): U64 = {
     val x = regs.read(reg)
     journal.trace(Trace.TraceReg.Read(reg, x))
@@ -25,7 +25,10 @@ final class RV64CPU(regs: Regs = Regs(), mem: Mem = Mem(), journal: Journal = Jo
   def writePC(pc: U64) = writeReg(Reg.PC, pc)
 
   // TODO
-  def fetch: Fetch = ???
+  def fetch: Fetch = {
+    val pc = readPC
+    ???
+  }
 }
 
 object RV64CPU {
