@@ -1,6 +1,7 @@
 package goosea.cpu
 
 import goosea.mem.Mem
+import goosea.utils._
 
 val RV64_MEMORY_BASE = 0x80000000
 val RV64_MEMORY_SIZE = 1024 * 1024 * 1024
@@ -30,5 +31,5 @@ val VIRTIO_END = VIRTIO_BASE + VIRTIO_SIZE
 // Builtin IO maps:
 // - 0x1000      - 0x1000 + 0xf000       ==== Virt_MROM, like device trees
 // - 0x0x2000000 - 0x2000000 + 0x10000   ==== CLINT
-case class Bus(mem: Mem = Mem()) {
+case class Bus(mem: Mem = Mem(RV64_MEMORY_BASE, RV64_MEMORY_SIZE)) {
 }

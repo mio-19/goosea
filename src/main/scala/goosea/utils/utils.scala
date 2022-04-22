@@ -3,14 +3,56 @@ package goosea.utils
 import org.joou.*
 import scodec.bits.BitVector
 import org.joou.Unsigned.*
+import java.lang.Long
+import scala.language.implicitConversions
+import java.math.BigInteger
 
 type U64 = ULong
+
+implicit class U64Ops(self: U64) {
+  // From ULong.java
+  /*
+    @Override
+    public String toString() {
+        if (value >= 0)
+            return Long.toString(value);
+        else
+            return BigInteger.valueOf(value & Long.MAX_VALUE).add(MAX_VALUE_LONG).toString();
+    }
+  */
+  def toBigInteger = {
+    val value = self.longValue
+    if (value >= 0)
+      BigInteger.valueOf(value)
+    else
+      BigInteger.valueOf(value & Long.MAX_VALUE).add(ULong.MAX_VALUE_LONG)
+  }
+
+  def /(that: U64): U64 = ULong.valueOf(self.toBigInteger.divide(that.toBigInteger))
+
+  def %(that: U64): U64 = ULong.valueOf(self.toBigInteger.mod(that.toBigInteger))
+
+  def /%(that: U64): (U64, U64) = {
+    val result = self.toBigInteger.divideAndRemainder(that.toBigInteger)
+    (ULong.valueOf(result(0)), ULong.valueOf(result(1)))
+  }
+
+  def +(that: U64): U64 = self.add(that)
+
+  def +(that: Int): U64 = self.add(that)
+
+  def +(that: Long): U64 = self.add(that)
+
+  def isZero = self equals ulong(0)
+
+  def toInt = self.intValue
+}
 
 object U64 {
   def apply(x: Int): U64 = ulong(x)
 }
 
-implicit def int2I64(x: Int): U64 = U64(x)
+implicit def int2U64(x: Int): U64 = U64(x)
 
 implicit class Fin32(i: Int) {
   if (!(0 <= i && i < 32)) {
@@ -42,23 +84,24 @@ object U32 {
   def apply(x: Long): U32 = uint(x)
 }
 
+implicit def intToU32(x: Int): U32 = U32(x)
+implicit def longToU32(x: Long): U32 = U32(x)
+
 implicit class U32Ops(x: U32) {
   def toInt: Int = x.intValue
 
   def toLong: Long = x.longValue
 
-  def |(other: U32): U32 = this.toLong | U32Ops(other).toLong
+  def |(other: U32): U32 = U32(this.toLong | U32Ops(other).toLong)
 
-  def <<(other: U32): U32 = this.toLong << U32Ops(other).toLong
-  def >>(other: U32): U32 = this.toLong >> U32Ops(other).toLong
+  def <<(other: U32): U32 = U32(this.toLong << U32Ops(other).toLong)
 
-  def &(other: U32): U32 = this.toLong & U32Ops(other).toLong
+  def >>(other: U32): U32 = U32(this.toLong >> U32Ops(other).toLong)
+
+  def &(other: U32): U32 = U32(this.toLong & U32Ops(other).toLong)
 
   def toBitVector: BitVector = BitVector.fromLong(this.toLong, 32)
 }
-
-implicit def intToU32(x: Int): U32 = U32(x)
-implicit def longToU32(x: Long): U32 = U32(x)
 
 implicit class U8(i: Int) {
   if (!(0 <= i && i < 256)) {

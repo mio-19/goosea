@@ -1,5 +1,7 @@
 package goosea.mem
 
+import goosea.utils._
+
 import java.nio.ByteBuffer
 import java.io.ByteArrayInputStream
 
@@ -11,7 +13,7 @@ val pageMask: Int = (1 << pageAddr) - 1
 
 // 1GB
 // thread-safe
-final class Mem(pageNumber: Int = 1024) {
+final class RawMem(pageNumber: Int = 1024) {
   val buff: Array[ByteBuffer] = new Array[ByteBuffer](pageNumber)
 
   def get(addr: Int): Byte = {
@@ -52,5 +54,15 @@ final class Mem(pageNumber: Int = 1024) {
       i += 1
       data = xs.read()
     }
+  }
+}
+
+final case class Mem(base: U64, size: U64, memory: RawMem)
+object Mem {
+  def apply(base: U64, size: U64): Mem = {
+    val (basePages, more): (U64, U64) = size /% pageSize
+    val pages = if(more.isZero) basePages else basePages + 1
+    val memory = new RawMem(pages.toInt)
+    new Mem(base, size, memory)
   }
 }
