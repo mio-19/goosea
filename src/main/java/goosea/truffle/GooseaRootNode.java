@@ -4,20 +4,18 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 
 public class GooseaRootNode extends RootNode {
-    @Children
+    @Child
     @SuppressWarnings("FieldMayBeFinal")
-    private GooseaNode[] nodes;
+    private GooseaNode node;
 
-    public GooseaRootNode(GooseaNode[] nodes) {
+    public GooseaRootNode(GooseaNode node) {
         super(null, null);
-        this.nodes = nodes;
+        this.node = node;
     }
 
     @Override
     public Object execute(VirtualFrame frame) {
-        for (GooseaNode node : nodes) {
-            node.execute(frame);
-        }
+        node.execute(frame);
         return null;
     }
 }
