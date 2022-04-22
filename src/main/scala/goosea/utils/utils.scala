@@ -1,15 +1,16 @@
 package goosea.utils
 
+import org.joou.*
 import scodec.bits.BitVector
+import org.joou.Unsigned.*
 
-
-// todo - fix me
-implicit class U64(i: Long)
+type U64 = ULong
 
 object U64 {
-  def apply(x: Int): U64 = U64(x)
+  def apply(x: Int): U64 = ulong(x)
 }
 
+implicit def int2I64(x: Int): U64 = U64(x)
 
 implicit class Fin32(i: Int) {
   if (!(0 <= i && i < 32)) {
@@ -27,41 +28,37 @@ implicit class Fin16(i: Int) {
   }
 }
 
-implicit class U16(i: Int) {
-  if (!(0 <= i && i < 65536)) {
-    throw new IllegalArgumentException()
-  }
+type U16 = UShort
 
-  def toInt: Int = i
-
-  def ==(other: Int): Boolean = i == other
-}
-
-
-implicit def intToU16(x: Int): U16 = U16(x)
-implicit def u16ToInt(x: U16): Int = x.toInt
+implicit def intToU16(x: Int): U16 = ushort(x)
+implicit def u16ToInt(x: U16): Int = x.intValue
 implicit def u16ToBitVector(x: U16): BitVector = BitVector.fromInt(x, 16)
 
-
-implicit class U32(i: Long) {
-  if (!(0 <= i && i < 4294967296L)) {
-    throw new IllegalArgumentException()
-  }
-
-  def toLong: Long = i
-
-  def |(other: U32): U32 = this.toLong | other.toLong
-
-  def >>(other: U32): U32 = this.toLong >> other.toLong
-}
+type U32 = UInteger
 
 object U32 {
-  def apply(x: Int): U32 = new U32(x.toLong)
+  def apply(x: Int): U32 = uint(x)
+
+  def apply(x: Long): U32 = uint(x)
 }
 
-implicit def intToU32(x: Int): U32 = U32(x.toLong)
-implicit def u32ToLong(x: U32): Long = x.toLong
-implicit def u32ToBitVector(x: U32): BitVector = BitVector.fromLong(x, 32)
+implicit class U32Ops(x: U32) {
+  def toInt: Int = x.intValue
+
+  def toLong: Long = x.longValue
+
+  def |(other: U32): U32 = this.toLong | U32Ops(other).toLong
+
+  def <<(other: U32): U32 = this.toLong << U32Ops(other).toLong
+  def >>(other: U32): U32 = this.toLong >> U32Ops(other).toLong
+
+  def &(other: U32): U32 = this.toLong & U32Ops(other).toLong
+
+  def toBitVector: BitVector = BitVector.fromLong(this.toLong, 32)
+}
+
+implicit def intToU32(x: Int): U32 = U32(x)
+implicit def longToU32(x: Long): U32 = U32(x)
 
 implicit class U8(i: Int) {
   if (!(0 <= i && i < 256)) {

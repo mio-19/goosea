@@ -13,8 +13,10 @@ def unwarp[T](x: Attempt[DecodeResult[T]]): T = {
   if (v.remainder.isEmpty) v.value else throw new IllegalArgumentException()
 }
 
-implicit class Bytecode(repr: U32) {
-  def toU32: U32 = repr
+implicit class Bytecode(u32: U32) {
+  def repr: BitVector = u32.toBitVector
+
+  def toU32: U32 = u32
 
   def opcode: Int = unwarp(opcodepeekCodec.decode(repr)).opcode
 

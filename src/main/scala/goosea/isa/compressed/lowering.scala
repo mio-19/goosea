@@ -196,7 +196,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
         // Sign-extended.
         val imm1 = (imm & 0x20000) == 0 match {
           case true => imm
-          case false => (0xfffc0000 | imm)
+          case false => (imm|0xfffc0000 )
         }
         RV32Instr.LUI(rd, Imm32_31_12(imm1 >> 12))
       }
