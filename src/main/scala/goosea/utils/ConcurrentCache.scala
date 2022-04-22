@@ -3,6 +3,7 @@ package goosea.utils
 import scala.ref.WeakReference
 import scala.collection.concurrent.TrieMap
 
+// TODO: use Int2ObjectMap
 final class ConcurrentCache[K, V <: AnyRef] {
   private val cache = TrieMap[K, WeakReference[V]]()
 
