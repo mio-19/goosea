@@ -42,7 +42,7 @@ implicit class Bytecode(u32: U32) {
 }
 
 implicit def bytecode2u32(x: Bytecode): U32 = x.toU32
-implicit def bytecode2bitvector(x: Bytecode): BitVector = x
+implicit def bytecode2bitvector(x: Bytecode): BitVector = x.repr
 
 sealed trait UntypedInstr
 
