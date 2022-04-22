@@ -4,7 +4,7 @@ import goosea.cpu.Regs
 import goosea.utils._
 import goosea.mem._
 
-final case class Context(regs: Regs, mem: Mem, jit: ConcurrentCache[U64, GooseaNode]) {
+final case class Context(regs: Regs, mem: Mem, compiled: ConcurrentCache[U64, GooseaNode]) {
 }
 
 object Context {
