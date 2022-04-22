@@ -15,7 +15,9 @@ final class Mem(pageNumber: Int = 1024) {
 
   def get(addr: Int): Byte = {
     val page = buff(addr >> pageAddr)
-    if (page == null) 0 else page.synchronized { page.get(addr & pageMask) }
+    if (page == null) 0 else page.synchronized {
+      page.get(addr & pageMask)
+    }
   }
 
   def put(addr: Int, x: Byte) = {
@@ -31,6 +33,13 @@ final class Mem(pageNumber: Int = 1024) {
     }
     page.synchronized {
       page.put(addr & pageMask, x)
+    }
+  }
+
+  // TODO: optimize me
+  def load(addr: Int, xs: Array[Byte]) = {
+    for (i <- xs.indices) {
+      this.put(addr + i, xs(i))
     }
   }
 }
