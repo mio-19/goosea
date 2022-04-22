@@ -1,6 +1,7 @@
 package goosea.mem
 
 import java.nio.ByteBuffer
+import java.io.ByteArrayInputStream
 
 
 // 1MB
@@ -37,9 +38,19 @@ final class Mem(pageNumber: Int = 1024) {
   }
 
   // TODO: optimize me
-  def load(addr: Int, xs: Array[Byte]) = {
+  def load(addr: Int, xs: Array[Byte]): Unit = {
     for (i <- xs.indices) {
       this.put(addr + i, xs(i))
+    }
+  }
+
+  def load(addr: Int, xs: ByteArrayInputStream): Unit = {
+    var i = addr
+    var data: Int = xs.read()
+    while (data != -1) {
+      this.put(i, data.toByte)
+      i += 1
+      data = xs.read()
     }
   }
 }
