@@ -15,12 +15,19 @@ val VM_V20211203_SV57 = 10
 val VM_V20211203_SV64 = 11
 
 type VMMode = U8
+
 object VMMode {
-  val MBARE:VMMode = VM_V20211203_MBARE
-  val SV39:VMMode = VM_V20211203_SV39
-  val SV48:VMMode = VM_V20211203_SV48
-  val SV57:VMMode = VM_V20211203_SV57
-  val SV64:VMMode = VM_V20211203_SV64
+  val MBARE: VMMode = VM_V20211203_MBARE
+  val SV39: VMMode = VM_V20211203_SV39
+  val SV48: VMMode = VM_V20211203_SV48
+  val SV57: VMMode = VM_V20211203_SV57
+  val SV64: VMMode = VM_V20211203_SV64
+}
+
+def sext_w(x: U32): U64 = {
+  val i: Int = x.toInt
+  val l: Long = i
+  U64.repr(l)
 }
 
 final class RV64CPU(
@@ -52,27 +59,34 @@ final class RV64CPU(
   // TODO
 
   final case class Fetch(pc: U64, bytecode: Bytecode, compressed: Bytecode16)
+
   def fetch: Fetch = {
     val pc = readPC
     ???
   }
+
   def fetchForMock(pc: U64): U32 = {
     ???
   }
+
   def mockFetch(pc: U64, instr: U32): Fetch = {
     ???
   }
+
   final case class Decode(from: Either[Bytecode, Bytecode16], decoded: Instr)
+
   def decode(fetch: Fetch): Decode = {
     ???
   }
+
   def execute(pc: U64, instr: Instr, isCompressed: Boolean): Unit = {
-    var nextPC = if(isCompressed) pc + 2 else pc + 4
+    var nextPC = if (isCompressed) pc + 2 else pc + 4
     journal.trace(Trace.TraceInstr.PrepareExecute(pc, instr))
     instr match {
       case NOP => {}
       // nop is also encoded as `ADDI x0, x0, 0`
       case RV32Instr.ADDI(Reg.X(0), Reg.X(0), Imm32(0)) => {}
+      case RV32Instr.LUI(rd, imm) => regs.write(rd, sext_w(imm.decode))
       // TODO
     }
     ???
@@ -87,7 +101,8 @@ final class RV64CPU(
     val isCompressed = from.isRight
     this.execute(fetch.pc, decoded, isCompressed)
   }
-  def mockTick(pc: U64, instr: U32):Unit = {
+
+  def mockTick(pc: U64, instr: U32): Unit = {
     if (this.wfi) {
       return
     }
@@ -98,13 +113,17 @@ final class RV64CPU(
   }
 
   sealed trait Reason
-  object Reason{
+
+  object Reason {
     case object Fetch extends Reason
+
     case object Read extends Reason
+
     case object Write extends Reason
   }
-  def translate(addr: U64, reason: Reason): U64 ={
-    if(this.vmmode == VMMode.MBARE){
+
+  def translate(addr: U64, reason: Reason): U64 = {
+    if (this.vmmode == VMMode.MBARE) {
       return addr
     }
 

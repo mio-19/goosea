@@ -1,7 +1,8 @@
 package goosea.isa
 
-import goosea.utils._
+import goosea.utils.*
 
+import scala.annotation.targetName
 import scala.language.implicitConversions
 
 sealed trait Reg

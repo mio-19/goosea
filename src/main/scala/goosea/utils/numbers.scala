@@ -51,6 +51,7 @@ implicit class U64Ops(self: U64) {
 
 object U64 {
   def apply(x: Int): U64 = ulong(x)
+  def repr(x: Long): U64 = ulong(x)
 }
 
 implicit def int2U64(x: Int): U64 = U64(x)
