@@ -89,7 +89,16 @@ final class RV64CPU(
       case RV32Instr.LUI(rd, imm) => regs.write(rd, sext_w(imm.decode))
       case RV32Instr.AUIPC(rd, offest) => regs.write(rd, pc + sext_w(offest.decode))
       case RV32Instr.JAL(rd, imm) => {
-        ???
+        val offset = sext_w(imm.decodeSext)
+        val target = pc + offset
+        regs.write(rd, nextPC)
+        nextPC = target
+      }
+      case RV32Instr.JALR(rd, rs1, imm) => {
+        val offset = sext_w(imm.decodeSext)
+        val target = ((regs.read(rs1) + offset) >> 1) << 1
+        regs.write(rd, nextPC)
+        nextPC = target
       }
       // TODO
     }

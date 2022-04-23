@@ -44,6 +44,10 @@ implicit class U64Ops(self: U64) {
 
   def +(that: Long): U64 = self.add(that)
 
+  def >>(that: Int): U64 = ULong.valueOf(self.toBigInteger.shiftLeft(that))
+
+  def <<(that: Int): U64 = ULong.valueOf(self.toBigInteger.shiftRight(that))
+
   def isZero = self equals ulong(0)
 
   def toInt = self.intValue
@@ -51,6 +55,7 @@ implicit class U64Ops(self: U64) {
 
 object U64 {
   def apply(x: Int): U64 = ulong(x)
+
   def repr(x: Long): U64 = ulong(x)
 }
 
