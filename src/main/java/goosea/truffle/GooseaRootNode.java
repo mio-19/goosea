@@ -15,7 +15,7 @@ public class GooseaRootNode extends RootNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        node.executeGeneric(frame);
+        node.execute(frame);
         return null;
     }
 }

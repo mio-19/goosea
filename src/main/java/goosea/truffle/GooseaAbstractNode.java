@@ -6,5 +6,5 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 @NodeInfo(language = "Goosea", description = "The abstract node")
 public abstract class GooseaAbstractNode extends Node {
-    public abstract Object executeGeneric(VirtualFrame frame);
+    public abstract void execute(VirtualFrame frame);
 }

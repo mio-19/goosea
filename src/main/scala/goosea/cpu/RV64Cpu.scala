@@ -56,7 +56,10 @@ final class RV64CPU(
     val pc = readPC
     ???
   }
-  def mockFetch(pc: U64): Fetch = {
+  def fetchForMock(pc: U64): U32 = {
+    ???
+  }
+  def mockFetch(pc: U64, instr: U32): Fetch = {
     ???
   }
   final case class Decode(from: Either[Bytecode, Bytecode16], decoded: Instr)
@@ -76,7 +79,7 @@ final class RV64CPU(
     val isCompressed = from.isRight
     this.execute(fetch.pc, decoded, isCompressed)
   }
-  def mockTick(pc: U64):Unit = {
+  def mockTick(pc: U64, instr: U32):Unit = {
     ???
   }
 
