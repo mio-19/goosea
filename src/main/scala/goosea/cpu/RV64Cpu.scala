@@ -5,6 +5,7 @@ import goosea.isa.compressed.*
 import goosea.isa.untyped.*
 import goosea.utils.*
 import goosea.mem.*
+import goosea.cpu.bus._
 
 final case class Fetch(pc: U64, bytecode: Bytecode, compressed: Bytecode16)
 
