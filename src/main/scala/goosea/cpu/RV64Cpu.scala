@@ -7,11 +7,32 @@ import goosea.utils.*
 import goosea.mem.*
 import goosea.cpu.bus.*
 
+/* VM modes (satp.mode) privileged ISA V20211203 */
+val VM_V20211203_MBARE = 0
+val VM_V20211203_SV39 = 8
+val VM_V20211203_SV48 = 9
+val VM_V20211203_SV57 = 10
+val VM_V20211203_SV64 = 11
+
+type VMMode = U8
+object VMMode {
+  val MBARE:VMMode = VM_V20211203_MBARE
+  val SV39:VMMode = VM_V20211203_SV39
+  val SV48:VMMode = VM_V20211203_SV48
+  val SV57:VMMode = VM_V20211203_SV57
+  val SV64:VMMode = VM_V20211203_SV64
+}
+
 final class RV64CPU(
                      regs: Regs = Regs(),
                      bus: Bus = Bus(),
                      journal: Journal = Journal(),
-                     wfi: Boolean = false
+                     // used by wfi instruction
+                     wfi: Boolean = false,
+                     // Virtual memory translation mode
+                     vmmode: VMMode = VMMode.MBARE,
+                     // physical page number used in virtual memory translation
+                     vmppn: U64 = 0,
                    ) {
   def readReg(reg: Reg): U64 = {
     val x = regs.read(reg)
@@ -56,6 +77,32 @@ final class RV64CPU(
     this.execute(fetch.pc, decoded, isCompressed)
   }
   def mockTick(pc: U64):Unit = {
+    ???
+  }
+
+  sealed trait Reason
+  object Reason{
+    case object Fetch extends Reason
+    case object Read extends Reason
+    case object Write extends Reason
+  }
+  def translate(addr: U64, reason: Reason): U64 ={
+    if(this.vmmode == VMMode.MBARE){
+      return addr
+    }
+
+    // 3.1.6.3 Memory Privilege in mstatus Register
+    // The MPRV (Modify PRiVilege) bit modifies the effective privilege mode,
+    // i.e., the privilege level at which loads and stores execute.
+    // When MPRV=0, loads and stores behave as normal, using the translation and protection
+    // mechanisms of the current privilege mode.
+    // When MPRV=1, load and store memory addresses are translated and protected,
+    // and endianness is applied, as though the current privilege mode were set to MPP.
+    // Instruction address-translation and protection are unaffected by the setting of MPRV.
+    // MPRV is read-only 0 if U-mode is not supported.
+    //val eff_mode = reason match {
+    //  case Reason.Fetch => this.mode,
+    //}
     ???
   }
 }
