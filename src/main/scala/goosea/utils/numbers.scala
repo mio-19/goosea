@@ -69,6 +69,8 @@ implicit class Fin16(i: Int) {
   if (!(0 <= i && i < 16)) {
     throw new IllegalArgumentException()
   }
+
+  def ==(other: Int) = i == other
 }
 
 type U16 = UShort

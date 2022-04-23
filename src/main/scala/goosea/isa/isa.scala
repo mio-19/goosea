@@ -9,6 +9,10 @@ sealed trait Reg
 object Reg {
   final case class X(f: Fin32) extends Reg
 
+  object X {
+    def unapply(x: X):Some[Int] = Some(x.f.toInt)
+  }
+
   final case class F(f: Fin32) extends Reg
 
   case object PC extends Reg
@@ -57,6 +61,10 @@ class Imm32(val highBit: Int, val lowBit: Int, val i: U32) {
     val lhs = this
     Imm32(lhs.highBit, rhs.lowBit, (lhs.decode | rhs.decode) >> rhs.lowBit)
   }
+}
+
+object Imm32 {
+  def unapply(i: Imm32):Some[Int] = Some(i.decode.toInt)
 }
 
 

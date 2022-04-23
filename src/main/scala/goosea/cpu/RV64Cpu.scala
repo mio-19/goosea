@@ -1,11 +1,11 @@
 package goosea.cpu
 
-import goosea.isa.{Instr, Reg}
 import goosea.isa.compressed.*
 import goosea.isa.untyped.*
 import goosea.utils.*
 import goosea.mem.*
 import goosea.cpu.bus.*
+import goosea.isa._
 
 /* VM modes (satp.mode) privileged ISA V20211203 */
 val VM_V20211203_MBARE = 0
@@ -26,7 +26,7 @@ object VMMode {
 final class RV64CPU(
                      regs: Regs = Regs(),
                      bus: Bus = Bus(),
-                     journal: Journal = Journal(),
+                     journal: Journal = JournalDisabled,
                      // used by wfi instruction
                      wfi: Boolean = false,
                      // Virtual memory translation mode
@@ -67,6 +67,14 @@ final class RV64CPU(
     ???
   }
   def execute(pc: U64, instr: Instr, isCompressed: Boolean): Unit = {
+    var nextPC = if(isCompressed) pc + 2 else pc + 4
+    journal.trace(Trace.TraceInstr.PrepareExecute(pc, instr))
+    instr match {
+      case NOP => {}
+      // nop is also encoded as `ADDI x0, x0, 0`
+      case RV32Instr.ADDI(Reg.X(0), Reg.X(0), Imm32(0)) => {}
+      // TODO
+    }
     ???
   }
 
@@ -80,7 +88,13 @@ final class RV64CPU(
     this.execute(fetch.pc, decoded, isCompressed)
   }
   def mockTick(pc: U64, instr: U32):Unit = {
-    ???
+    if (this.wfi) {
+      return
+    }
+    val fetch = this.mockFetch(pc, instr)
+    val Decode(from, decoded) = this.decode(fetch)
+    val isCompressed = from.isRight
+    this.execute(fetch.pc, decoded, isCompressed)
   }
 
   sealed trait Reason
