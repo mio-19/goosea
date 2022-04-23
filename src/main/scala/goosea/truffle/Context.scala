@@ -3,10 +3,17 @@ package goosea.truffle
 import goosea.cpu._
 import goosea.utils._
 import goosea.mem._
+import com.oracle.truffle.api.TruffleLanguage.ContextReference
 
-final case class Context(cpu: RV64CPU, compiled: ConcurrentCache[U64, GooseaNode]) {
+final case class Context(cpu: RV64CPU = RV64CPU(),
+                         compiled: ConcurrentCache[U64, GooseaNode] = ConcurrentCache()
+                        ) {
 }
 
 object Context {
-  def apply(): Context = Context(RV64CPU(), ConcurrentCache())
+  def apply(): Context = Context()
+
+  val REFERENCE: ContextReference[Context] = ContextReference.create(classOf[GooseaLang])
+
+  def get(node: GooseaNode): Context = REFERENCE.get(node)
 }

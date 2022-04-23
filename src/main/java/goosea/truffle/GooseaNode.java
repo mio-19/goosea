@@ -6,31 +6,36 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import org.joou.UInteger;
 import org.jetbrains.annotations.NotNull;
 import org.joou.ULong;
+import com.oracle.truffle.api.dsl.*;
 
 @NodeInfo(language = "Goosea", description = "The node")
-public class GooseaNode extends Node {
-    public final int instr;
+public abstract class GooseaNode extends GooseaAbstractNode {
+    // unsigned
+    public final long pc;
 
-    public GooseaNode(int instr) {
-        this.instr = instr;
+    public ULong getPC() {
+        return ULong.valueOf(this.pc);
     }
 
-    public GooseaNode(UInteger instr) {
-        this.instr = instr.intValue();
+    public GooseaNode(long pc) {
+        this.pc = pc;
     }
 
-    public UInteger getInstrU() {
-        return UInteger.valueOf(instr);
-    }
-
-    public void execute(VirtualFrame frame) {
-        throw new UnsupportedOperationException("TODO");
+    @Specialization
+    protected Object runInstr() {
+        Context context = getContext();
+        context.cpu().mockTick(this.getPC());
+        return null;
     }
 
     @Override
     public String toString() {
         return "GooseaNode{" +
-                "instr=" + instr +
+                "pc=" + this.getPC() +
                 '}';
+    }
+
+    public final Context getContext() {
+        return Context.get(this);
     }
 }

@@ -6,16 +6,16 @@ import com.oracle.truffle.api.nodes.RootNode;
 public class GooseaRootNode extends RootNode {
     @Child
     @SuppressWarnings("FieldMayBeFinal")
-    private GooseaNode node;
+    private GooseaAbstractNode node;
 
-    public GooseaRootNode(GooseaNode node) {
+    public GooseaRootNode(GooseaAbstractNode node) {
         super(null, null);
         this.node = node;
     }
 
     @Override
     public Object execute(VirtualFrame frame) {
-        node.execute(frame);
+        node.executeGeneric(frame);
         return null;
     }
 }
