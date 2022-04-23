@@ -87,6 +87,10 @@ final class RV64CPU(
       // nop is also encoded as `ADDI x0, x0, 0`
       case RV32Instr.ADDI(Reg.X(0), Reg.X(0), Imm32(0)) => {}
       case RV32Instr.LUI(rd, imm) => regs.write(rd, sext_w(imm.decode))
+      case RV32Instr.AUIPC(rd, offest) => regs.write(rd, pc + sext_w(offest.decode))
+      case RV32Instr.JAL(rd, imm) => {
+        ???
+      }
       // TODO
     }
     ???

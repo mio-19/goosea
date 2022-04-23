@@ -58,6 +58,12 @@ class Imm32(val highBit: Int, val lowBit: Int, val i: U32) {
     (this.i & mask) << lowBit
   }
 
+  def decode_sext: U32 = {
+    val data = this.decode
+    val signBit: U32 = highBit
+    (data << (U32(31) - signBit)) >> (U32(31) - signBit)
+  }
+
   def bitor(rhs: Imm32): Imm32 = {
     val lhs = this
     Imm32(lhs.highBit, rhs.lowBit, (lhs.decode | rhs.decode) >> rhs.lowBit)

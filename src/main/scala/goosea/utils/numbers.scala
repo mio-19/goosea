@@ -96,6 +96,8 @@ implicit class U32Ops(x: U32) {
 
   def toLong: Long = x.longValue
 
+  def -(other: U32): U32 = x.subtract(other)
+
   def |(other: U32): U32 = U32(this.toLong | U32Ops(other).toLong)
 
   def <<(other: U32): U32 = U32(this.toLong << U32Ops(other).toLong)
