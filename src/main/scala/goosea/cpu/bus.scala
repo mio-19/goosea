@@ -50,18 +50,34 @@ package object bus {
                   virtio: Virtio = Virtio()
                 ) {
 
-    def read8(addr: U64): U8 = {
+    private def read(addr: U64, size: Int): U8|U16|U32|U64 = {
+      // fast-path for builtin io devices
+      if(RV64_MEMORY_BASE<= addr && addr < RV64_MEMORY_END) {
+        size match {
+          case 1 => mem.read8(addr)
+          case 2 => mem.read16(addr)
+          case 4 => mem.read32(addr)
+          case 8 => mem.read64(addr)
+          case _ => throw new Exception(s"Unsupported size: $size")
+        }
+      } else if(VIRT_MROM_BASE <= addr && addr < VIRT_MROM_END) {
+        size match {
+          case 1 => deviceTree.read8(addr)
+          case 2 => deviceTree.read16(addr)
+          case 4 => deviceTree.read32(addr)
+          case 8 => deviceTree.read64(addr)
+          case _ => throw new Exception(s"Unsupported size: $size")
+        }
+      } else if(CLINT_BASE <= addr && addr < CLINT_END) {
+        ???
+      }
       ???
     }
-    def read16(addr: U64): U16 = {
-      ???
-    }
-    def read32(addr: U64): U32 = {
-      ???
-    }
-    def read64(addr: U64): U64 = {
-      ???
-    }
+
+    def read8(addr: U64): U8 = this.read(addr, 1).asInstanceOf[U8]
+    def read16(addr: U64): U16 = this.read(addr, 2).asInstanceOf[U16]
+    def read32(addr: U64): U32 = this.read(addr, 4).asInstanceOf[U32]
+    def read64(addr: U64): U64 = this.read(addr, 8).asInstanceOf[U64]
   }
 
 }
