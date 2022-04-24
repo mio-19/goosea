@@ -52,7 +52,7 @@ package object bus {
 
     private def read(addr: U64, size: Int): U8|U16|U32|U64 = {
       // fast-path for builtin io devices
-      if(RV64_MEMORY_BASE<= addr && addr < RV64_MEMORY_END) {
+      if(RV64_MEMORY_BASE<= addr && addr <= RV64_MEMORY_END) {
         size match {
           case 1 => mem.read8(addr)
           case 2 => mem.read16(addr)
@@ -60,7 +60,7 @@ package object bus {
           case 8 => mem.read64(addr)
           case _ => throw new Exception(s"Unsupported size: $size")
         }
-      } else if(VIRT_MROM_BASE <= addr && addr < VIRT_MROM_END) {
+      } else if(VIRT_MROM_BASE <= addr && addr <= VIRT_MROM_END) {
         size match {
           case 1 => deviceTree.read8(addr)
           case 2 => deviceTree.read16(addr)
@@ -68,7 +68,7 @@ package object bus {
           case 8 => deviceTree.read64(addr)
           case _ => throw new Exception(s"Unsupported size: $size")
         }
-      } else if(CLINT_BASE <= addr && addr < CLINT_END) {
+      } else if(CLINT_BASE <= addr && addr <= CLINT_END) {
         ???
       }
       ???
