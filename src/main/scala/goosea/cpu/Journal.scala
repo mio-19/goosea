@@ -21,6 +21,11 @@ object Trace{
     case class Executed(addr: U64, instr: Instr) extends TraceInstr
     case class ExecutedCompressed(addr: U64, instr: Instr) extends TraceInstr
   }
+  sealed trait TraceMem extends Trace
+  object TraceMem {
+    case class Read(addr: U64, paddr: U64, size: Int, value: String) extends TraceMem
+    case class Write(addr: U64, paddr: U64, size: Int, value: String) extends TraceMem
+  }
 }
 
 sealed trait Journal {

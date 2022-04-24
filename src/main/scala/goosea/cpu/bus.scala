@@ -49,6 +49,19 @@ package object bus {
                   plic: Plic = Plic(),
                   virtio: Virtio = Virtio()
                 ) {
+
+    def read8(addr: U64): U8 = {
+      ???
+    }
+    def read16(addr: U64): U16 = {
+      ???
+    }
+    def read32(addr: U64): U32 = {
+      ???
+    }
+    def read64(addr: U64): U64 = {
+      ???
+    }
   }
 
 }

@@ -41,6 +41,39 @@ final class RV64CPU(
                      // physical page number used in virtual memory translation
                      vmppn: U64 = 0,
                    ) {
+  def fetchMem(addr: U64): U32 = {
+    val paddr = this.translate(addr, Reason.Fetch)
+    bus.read32(paddr)
+  }
+
+  def readMem8(addr: U64): U8 = {
+    val paddr = this.translate(addr, Reason.Read)
+    val data = bus.read8(paddr)
+    journal.trace(Trace.TraceMem.Read(addr, paddr, 1, data.toString))
+    data
+  }
+
+  def readMem16(addr: U64): U16 = {
+    val paddr = this.translate(addr, Reason.Read)
+    val data = bus.read16(paddr)
+    journal.trace(Trace.TraceMem.Read(addr, paddr, 2, data.toString))
+    data
+  }
+
+  def readMem32(addr: U64): U32 = {
+    val paddr = this.translate(addr, Reason.Read)
+    val data = bus.read32(paddr)
+    journal.trace(Trace.TraceMem.Read(addr, paddr, 4, data.toString))
+    data
+  }
+
+  def readMem64(addr: U64): U64 = {
+    val paddr = this.translate(addr, Reason.Read)
+    val data = bus.read64(paddr)
+    journal.trace(Trace.TraceMem.Read(addr, paddr, 8, data.toString))
+    data
+  }
+
   def readReg(reg: Reg): U64 = {
     val x = regs.read(reg)
     journal.trace(Trace.TraceReg.Read(reg, x))
@@ -129,6 +162,9 @@ final class RV64CPU(
         if (regs.read(rs1) >= regs.read(rs2)) {
           nextPC = pc + sext_w(imm.decodeSext)
         }
+      }
+      case RV32Instr.LB(rd, rs1, offest) => {
+        ???
       }
       // TODO
     }
