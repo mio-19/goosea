@@ -2,6 +2,7 @@ package goosea.truffle
 
 import goosea.cpu._
 import goosea.utils._
+import goosea.utils.num._
 import goosea.mem._
 import com.oracle.truffle.api.TruffleLanguage.ContextReference
 

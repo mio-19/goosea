@@ -1,6 +1,6 @@
 package goosea.isa
 
-import goosea.utils.*
+import goosea.utils.num._
 
 import scala.annotation.targetName
 import scala.language.implicitConversions

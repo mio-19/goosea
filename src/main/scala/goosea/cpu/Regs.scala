@@ -1,6 +1,7 @@
 package goosea.cpu
 
 import goosea.utils._
+import goosea.utils.num._
 import goosea.isa._
 
 final class Regs(var x: Array[U64], var csr: U64, var pc: U64) {

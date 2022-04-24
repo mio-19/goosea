@@ -1,6 +1,6 @@
 package goosea.device
 
-import goosea.utils._
+import goosea.utils.num._
 import goosea.mem._
 
 sealed trait Device {

@@ -1,6 +1,6 @@
 package goosea.mem
 
-import goosea.utils._
+import goosea.utils.num._
 
 import java.nio.ByteBuffer
 import java.io.ByteArrayInputStream
@@ -61,7 +61,7 @@ final case class Mem(base: U64, size: U64, memory: RawMem)
 object Mem {
   def apply(base: U64, size: U64): Mem = {
     val (basePages, more): (U64, U64) = size /% pageSize
-    val pages = if(more.isZero) basePages else basePages + 1
+    val pages = if(more == 0) basePages else basePages + 1
     val memory = new RawMem(pages.toInt)
     new Mem(base, size, memory)
   }

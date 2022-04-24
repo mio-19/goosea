@@ -2,7 +2,7 @@ package goosea.cpu
 
 import goosea.isa.compressed.*
 import goosea.isa.untyped.*
-import goosea.utils.*
+import goosea.utils.num._
 import goosea.mem.*
 import goosea.cpu.bus.*
 import goosea.isa._
@@ -27,7 +27,7 @@ object VMMode {
 def sext_w(x: U32): U64 = {
   val i: Int = x.toInt
   val l: Long = i
-  U64.repr(l)
+  U64(l)
 }
 
 final class RV64CPU(

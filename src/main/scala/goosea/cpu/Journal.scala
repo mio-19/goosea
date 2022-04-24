@@ -1,6 +1,6 @@
 package goosea.cpu
 
-import goosea.utils._
+import goosea.utils.num._
 import goosea.isa._
 import goosea.isa.compressed.*
 import goosea.isa.untyped.*

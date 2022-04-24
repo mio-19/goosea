@@ -1,7 +1,7 @@
 package goosea.isa.untyped
 
 import goosea.isa.*
-import goosea.utils._
+import goosea.utils.num._
 import scodec.*
 import scodec.bits.*
 import scodec.codecs.*

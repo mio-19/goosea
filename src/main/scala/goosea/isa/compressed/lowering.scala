@@ -1,7 +1,7 @@
 package goosea.isa.compressed
 
 import goosea.isa._
-import goosea.utils._
+import goosea.utils.num._
 import goosea.isa.untyped.{gp, fp}
 import scala.language.implicitConversions
 
@@ -133,7 +133,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
         // imm[5|4:0] = inst[12|6:2]
         val imm = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
         // Sign-extended.
-        val imm1 = (imm & 0x20) == 0 match {
+        val imm1:U32 = (imm & 0x20) == 0 match {
           case true => imm
           case false => extendi8(0xc0 | imm)
         }
@@ -148,7 +148,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
         // imm[5|4:0] = inst[12|6:2]
         val imm = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
         // Sign-extended.
-        val imm1 = (imm & 0x20) == 0 match {
+        val imm1:U32 = (imm & 0x20) == 0 match {
           case true => imm
           case false => extendi8(0xc0 | imm)
         }
@@ -162,7 +162,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
         // imm[5|4:0] = inst[12|6:2]
         val imm = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
         // Sign-extended.
-        val imm1 = (imm & 0x20) == 0 match {
+        val imm1:U32 = (imm & 0x20) == 0 match {
           case true => imm
           case false => extendi8(0xc0 | imm)
         }
@@ -179,7 +179,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
           | ((inst << 4) & 0x180) // nzimm[8:7]
           | ((inst << 3) & 0x20) // nzimm[5]
         // Sign-extended.
-        val nzimm1 = (nzimm & 0x200) == 0 match {
+        val nzimm1:U32 = (nzimm & 0x200) == 0 match {
           case true => nzimm
           case false => extendi16(0xfc00 | nzimm)
         }
@@ -231,7 +231,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
           // imm[5|4:0] = inst[12|6:2]
           val imm = ((inst >> 7) & 0x20) | ((inst >> 2) & 0x1f)
           // Sign-extended.
-          val imm1 = (imm & 0x20) == 0 match {
+          val imm1:U32 = (imm & 0x20) == 0 match {
             case true => imm
             case false => extendi8(0xc0 | imm)
           }
@@ -270,7 +270,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
           | ((inst >> 7) & 0x10) // offset[4]
           | ((inst >> 2) & 0xe) // offset[3:1]
         // Sign-extended.
-        val offset1 = (offset & 0x800) == 0 match {
+        val offset1:U32 = (offset & 0x800) == 0 match {
           case true => offset
           case false => (0xf000 | offset)
         }
@@ -287,7 +287,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
           | ((inst >> 7) & 0x18) // offset[4:3]
           | ((inst >> 2) & 0x6) // offset[2:1]
         // Sign-extended.
-        val offset1 = (offset & 0x100) == 0 match {
+        val offset1:U32 = (offset & 0x100) == 0 match {
           case true => offset
           case false => (0xfe00 | offset)
         }
@@ -304,7 +304,7 @@ def decode_untyped(untyped: Bytecode16): Option[Instr] = {
           | ((inst >> 7) & 0x18) // offset[4:3]
           | ((inst >> 2) & 0x6) // offset[2:1]
         // Sign-extended.
-        val offset1 = (offset & 0x100) == 0 match {
+        val offset1:U32 = (offset & 0x100) == 0 match {
           case true => offset
           case false => (0xfe00 | offset)
         }

@@ -3,10 +3,8 @@ package goosea.truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
-import org.joou.UInteger;
 import org.jetbrains.annotations.NotNull;
-import org.joou.ULong;
-import org.joou.UInteger;
+import goosea.utils.num.*;
 import com.oracle.truffle.api.dsl.*;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
@@ -19,12 +17,12 @@ public class GooseaNode extends GooseaAbstractNode {
     @CompilationFinal
     private int instr;
 
-    public ULong getPC() {
-        return ULong.valueOf(this.pc);
+    public final U64 getPC() {
+        return U64.apply(this.pc);
     }
 
-    private UInteger getInstr() {
-        return UInteger.valueOf(this.instr);
+    private final U32 getInstr() {
+        return U32.apply(this.instr);
     }
 
     public GooseaNode(long pc) {
@@ -34,7 +32,7 @@ public class GooseaNode extends GooseaAbstractNode {
     @Override
     public void execute(VirtualFrame frame) {
         Context context = getContext();
-        int currentInstr = context.cpu().fetchForMock(ULong.valueOf(this.pc)).intValue();
+        int currentInstr = context.cpu().fetchForMock(this.getPC()).toInt();
         if (currentInstr != this.instr) {
             CompilerDirectives.transferToInterpreterAndInvalidate();
             var lock = getLock();

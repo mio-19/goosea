@@ -1,7 +1,7 @@
 package goosea.isa.untyped
 
 import goosea.isa._
-import goosea.utils._
+import goosea.utils.num._
 
 import scala.language.implicitConversions
 

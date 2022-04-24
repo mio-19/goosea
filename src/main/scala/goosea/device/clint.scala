@@ -1,7 +1,7 @@
 package goosea.device
 
 import goosea.cpu.bus.CLINT_BASE
-import goosea.utils._
+import goosea.utils.num._
 
 package object clint {
   // machine timer register

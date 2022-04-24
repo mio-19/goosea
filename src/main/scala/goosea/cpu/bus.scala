@@ -1,7 +1,7 @@
 package goosea.cpu
 
 import goosea.mem.Mem
-import goosea.utils.*
+import goosea.utils.num._
 import goosea.device.*
 import goosea.device.clint.Clint
 import goosea.device.plic.Plic

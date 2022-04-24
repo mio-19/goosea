@@ -14,7 +14,7 @@ lazy val root = project
       "org.scodec" %% "scodec-bits" % "1.1.30",
       "org.graalvm.truffle" % "truffle-api" % "22.0.0",
       "org.jetbrains" % "annotations" % "23.0.0",
-      "org.jooq" % "joou" % "0.9.4",
+      //"org.jooq" % "joou" % "0.9.4",
       //"it.unimi.dsi" % "fastutil" % "8.5.8",
     )
   )
