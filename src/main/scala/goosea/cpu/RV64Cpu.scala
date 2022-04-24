@@ -101,7 +101,7 @@ final class RV64CPU(
     journal.trace(Trace.TraceReg.Write(reg, value))
   }
 
-  def ldst_addr(rs1: Reg, offest: Imm32): U64 = regs.read(rs1)+ sext_w32(offest.decodeSext)
+  def ldst_addr(rs1: Reg, offset: Imm32): U64 = regs.read(rs1)+ sext_w32(offset.decodeSext)
 
   def readPC: U64 = readReg(Reg.PC)
 
@@ -181,38 +181,38 @@ final class RV64CPU(
           nextPC = pc + sext_w32(imm.decodeSext)
         }
       }
-      case RV32Instr.LB(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV32Instr.LB(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem8(addr)
         regs.write(rd, sext_w8(data))
       }
-      case RV32Instr.LH(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV32Instr.LH(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem16(addr)
         regs.write(rd, sext_w16(data))
       }
-      case RV32Instr.LW(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV32Instr.LW(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem32(addr)
         regs.write(rd, sext_w32(data))
       }
-      case RV64Instr.LD(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV64Instr.LD(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem64(addr)
         regs.write(rd, data)
       }
-      case RV32Instr.LBU(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV32Instr.LBU(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem8(addr)
         regs.write(rd, zext_d8(data))
       }
-      case RV32Instr.LHU(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV32Instr.LHU(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem16(addr)
         regs.write(rd, zext_d16(data))
       }
-      case RV64Instr.LWU(rd, rs1, offest) => {
-        val addr = ldst_addr(rs1, offest)
+      case RV64Instr.LWU(rd, rs1, offset) => {
+        val addr = ldst_addr(rs1, offset)
         val data = readMem32(addr)
         regs.write(rd, zext_d32(data))
       }
