@@ -13,6 +13,7 @@ val pageMask: Int = (1 << pageAddr) - 1
 
 // 1GB
 // thread-safe
+// addr is unsigned Long
 final class RawMem(pageNumber: Int = 1024) {
   val buff: Array[ByteBuffer] = new Array[ByteBuffer](pageNumber)
 
