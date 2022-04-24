@@ -51,6 +51,12 @@ implicit class U64Ops(self: U64) {
   def isZero = self equals ulong(0)
 
   def toInt = self.intValue
+
+  def toLong = self.longValue()
+
+  def <(that: U64): Boolean = self.compareTo(that) < 0
+
+  def >=(that: U64): Boolean = self.compareTo(that) >= 0
 }
 
 object U64 {

@@ -100,6 +100,36 @@ final class RV64CPU(
         regs.write(rd, nextPC)
         nextPC = target
       }
+      case RV32Instr.BEQ(rs1, rs2, imm) => {
+        if (regs.read(rs1) == regs.read(rs2)) {
+          nextPC = pc + sext_w(imm.decodeSext)
+        }
+      }
+      case RV32Instr.BNE(rs1, rs2, imm) => {
+        if (regs.read(rs1) != regs.read(rs2)) {
+          nextPC = pc + sext_w(imm.decodeSext)
+        }
+      }
+      case RV32Instr.BLT(rs1, rs2, imm) => {
+        if (regs.read(rs1).toLong < regs.read(rs2).toLong) {
+          nextPC = pc + sext_w(imm.decodeSext)
+        }
+      }
+      case RV32Instr.BGE(rs1, rs2, imm) => {
+        if (regs.read(rs1).toLong >= regs.read(rs2).toLong) {
+          nextPC = pc + sext_w(imm.decodeSext)
+        }
+      }
+      case RV32Instr.BLTU(rs1, rs2, imm) => {
+        if (regs.read(rs1) < regs.read(rs2)) {
+          nextPC = pc + sext_w(imm.decodeSext)
+        }
+      }
+      case RV32Instr.BGEU(rs1, rs2, imm) => {
+        if (regs.read(rs1) >= regs.read(rs2)) {
+          nextPC = pc + sext_w(imm.decodeSext)
+        }
+      }
       // TODO
     }
     ???
