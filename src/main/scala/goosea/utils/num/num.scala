@@ -23,6 +23,8 @@ final case class U8(x: Byte) {
 
   def toU32: U32 = U32(this.toInt)
 
+  def toU64: U64 = U64(this.toLong)
+
   override def toString = this.toU32.toString
 
   def unary_~ : U8 = U8(~x)
@@ -79,7 +81,11 @@ final case class U16(x: Short) {
 
   def toInt: Int = java.lang.Short.toUnsignedInt(x)
 
+  def toLong: Long = java.lang.Short.toUnsignedLong(x)
+
   def toU32: U32 = U32(this.toInt)
+
+  def toU64: U64 = U64(this.toLong)
 
   def toBitVector: BitVector = BitVector.fromInt(this.toInt, 16)
 
@@ -141,6 +147,8 @@ final case class U32(x: Int) {
   def toLong: Long = Integer.toUnsignedLong(x)
 
   def toBitVector: BitVector = BitVector.fromLong(this.toLong, 32)
+
+  def toU64: U64 = U64(this.toLong)
 
   override def toString: String = Integer.toUnsignedString(x)
 
