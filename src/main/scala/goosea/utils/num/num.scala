@@ -306,11 +306,15 @@ object U64 {
    */
   val MAX_VALUE_LONG: BigInteger = new BigInteger("9223372036854775808");
 
+  val MaxValue = U64("18446744073709551615")
+
   def apply(x: Int): U64 = new U64(x)
 
   def apply(x: Long): U64 = new U64(x)
 
   def apply(x: BigInteger): U64 = new U64(x.longValue())
+
+  def apply(x:String):U64 = U64(new BigInteger(x))
 
   def checked(x: Int): U64 = if (0 <= x) {
     U64(x)

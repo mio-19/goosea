@@ -2,10 +2,11 @@ package goosea.cpu
 
 import goosea.isa.compressed.*
 import goosea.isa.untyped.*
-import goosea.utils.num._
+import goosea.utils.num.*
 import goosea.mem.*
 import goosea.cpu.bus.*
-import goosea.isa._
+import goosea.cpu.csr.CSRRegs
+import goosea.isa.*
 
 /* VM modes (satp.mode) privileged ISA V20211203 */
 val VM_V20211203_MBARE = 0
@@ -51,8 +52,20 @@ def zext_d8(x: U8): U64 = x.toU64
 def zext_d16(x: U16): U64 = x.toU64
 def zext_d32(x: U32): U64 = x.toU64
 
+sealed trait PrivilegeMode
+
+object PrivilegeMode {
+  case object User extends PrivilegeMode
+
+  case object Supervisor extends PrivilegeMode
+
+  case object Machine extends PrivilegeMode
+}
+
 final class RV64CPU(
                      regs: Regs = Regs(),
+                     csrs: CSRRegs = CSRRegs(),
+                     mode: PrivilegeMode = PrivilegeMode.Machine,
                      bus: Bus = Bus(),
                      journal: Journal = JournalDisabled,
                      // used by wfi instruction
@@ -159,6 +172,7 @@ final class RV64CPU(
     ???
   }
 
+  // throws CPUThrowable
   def execute(pc: U64, instr: Instr, isCompressed: Boolean): Unit = {
     var nextPC = if (isCompressed) pc + 2 else pc + 4
     journal.trace(Trace.TraceInstr.PrepareExecute(pc, instr))
@@ -332,22 +346,22 @@ final class RV64CPU(
         regs.write(rd, if (regs.read(rs1) < regs.read(rs2)) 1 else 0)
       }
       case RV32Instr.SLL(rd, rs1, rs2) => {
-        regs.write(rd, regs.read(rs1) << (regs.read(rs2)&63))
+        regs.write(rd, regs.read(rs1) << (regs.read(rs2) & 63))
       }
       case RV32Instr.SRL(rd, rs1, rs2) => {
-        regs.write(rd, regs.read(rs1) >> (regs.read(rs2)&63))
+        regs.write(rd, regs.read(rs1) >> (regs.read(rs2) & 63))
       }
       case RV64Instr.SLLW(rd, rs1, rs2) => {
-        regs.write(rd, sext_w32(regs.read(rs1).toU32 << (regs.read(rs2)&31)))
+        regs.write(rd, sext_w32(regs.read(rs1).toU32 << (regs.read(rs2) & 31)))
       }
       case RV64Instr.SRLW(rd, rs1, rs2) => {
-        regs.write(rd, sext_w32(regs.read(rs1).toU32 >> (regs.read(rs2)&31)))
+        regs.write(rd, sext_w32(regs.read(rs1).toU32 >> (regs.read(rs2) & 31)))
       }
       case RV32Instr.SRA(rd, rs1, rs2) => {
-        regs.write(rd, U64(regs.read(rs1).toLong >> (regs.read(rs2).toInt&63)))
+        regs.write(rd, U64(regs.read(rs1).toLong >> (regs.read(rs2).toInt & 63)))
       }
       case RV64Instr.SRAW(rd, rs1, rs2) => {
-        regs.write(rd, sext_w32(U32(regs.read(rs1).toInt >> (regs.read(rs2).toInt&31))))
+        regs.write(rd, sext_w32(U32(regs.read(rs1).toInt >> (regs.read(rs2).toInt & 31))))
       }
 
       case RV32Instr.XOR(rd, rs1, rs2) => {
@@ -360,11 +374,37 @@ final class RV64CPU(
         regs.write(rd, regs.read(rs1) & regs.read(rs2))
       }
 
-      case RV32Instr.FENCE(_,_,_,_,_) => {}
-      case RV64Instr.FENCE_I(_,_,_) => {}
+      case RV32Instr.FENCE(_, _, _, _, _) => {}
+      case RV64Instr.FENCE_I(_, _, _) => {}
       case RV32Instr.FENCE_TSO => {}
       case RV32Instr.PAUSE => throw new UnsupportedOperationException("not implemented at PC=0x" + pc.toString(16))
-      case RV32Instr.ECALL => ???
+      case RV32Instr.ECALL => this.mode match {
+        case PrivilegeMode.User => throw CPUThrowable.UserEcall
+        case PrivilegeMode.Supervisor => throw CPUThrowable.SupervisorEcall
+        case PrivilegeMode.Machine => throw CPUThrowable.MachineEcall
+      }
+
+      // RVM
+      // TODO: implement
+      case RV32Instr.MUL(rd, rs1, rs2) => {
+        regs.write(rd, U64(regs.read(rs1).toLong * regs.read(rs2).toLong))
+      }
+      case RV32Instr.MULH(rd, rs1, rs2) => ???
+      case RV32Instr.MULHSU(rd, rs1, rs2) => ???
+      case RV32Instr.MULHU(rd, rs1, rs2) => ???
+      case RV32Instr.DIV(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1).toLong
+        val divisor = regs.read(rs2).toLong
+        val result = if (divisor == 0) {
+          ???
+          U64.MaxValue
+        } else if (dividend == Long.MinValue && divisor == -1) {
+          U64(Long.MinValue)
+        } else {
+          U64(dividend / divisor)
+        }
+        regs.write(rd, result)
+      }
 
     }
     ???
