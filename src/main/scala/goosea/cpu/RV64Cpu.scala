@@ -43,8 +43,8 @@ def sext_w16(x: U16): U64 = {
 }
 def zext_d8(x: U8): U64 = x.toU64
 
-def zext_d16(x:U16):U64 = x.toU64
-def zext_d32(x:U32):U64 = x.toU64
+def zext_d16(x: U16): U64 = x.toU64
+def zext_d32(x: U32): U64 = x.toU64
 
 final class RV64CPU(
                      regs: Regs = Regs(),
@@ -90,6 +90,30 @@ final class RV64CPU(
     data
   }
 
+  def writeMem8(addr: U64, data: U8) = {
+    val paddr = this.translate(addr, Reason.Write)
+    bus.write8(paddr, data)
+    journal.trace(Trace.TraceMem.Write(addr, paddr, 1, data.toString))
+  }
+
+  def writeMem16(addr: U64, data: U16) = {
+    val paddr = this.translate(addr, Reason.Write)
+    bus.write16(paddr, data)
+    journal.trace(Trace.TraceMem.Write(addr, paddr, 2, data.toString))
+  }
+
+  def writeMem32(addr: U64, data: U32) = {
+    val paddr = this.translate(addr, Reason.Write)
+    bus.write32(paddr, data)
+    journal.trace(Trace.TraceMem.Write(addr, paddr, 4, data.toString))
+  }
+
+  def writeMem64(addr: U64, data: U64) = {
+    val paddr = this.translate(addr, Reason.Write)
+    bus.write64(paddr, data)
+    journal.trace(Trace.TraceMem.Write(addr, paddr, 8, data.toString))
+  }
+
   def readReg(reg: Reg): U64 = {
     val x = regs.read(reg)
     journal.trace(Trace.TraceReg.Read(reg, x))
@@ -101,7 +125,7 @@ final class RV64CPU(
     journal.trace(Trace.TraceReg.Write(reg, value))
   }
 
-  def ldst_addr(rs1: Reg, offset: Imm32): U64 = regs.read(rs1)+ sext_w32(offset.decodeSext)
+  def ldst_addr(rs1: Reg, offset: Imm32): U64 = regs.read(rs1) + sext_w32(offset.decodeSext)
 
   def readPC: U64 = readReg(Reg.PC)
 
@@ -216,7 +240,65 @@ final class RV64CPU(
         val data = readMem32(addr)
         regs.write(rd, zext_d32(data))
       }
-      // TODO
+      case RV32Instr.SB(rs1, rs2, offset) => {
+        val addr = ldst_addr(rs1, offset)
+        val data = regs.read(rs2)
+        writeMem8(addr, data.toU8)
+      }
+      case RV32Instr.SH(rs1, rs2, offset) => {
+        val addr = ldst_addr(rs1, offset)
+        val data = regs.read(rs2)
+        writeMem16(addr, data.toU16)
+      }
+      case RV32Instr.SW(rs1, rs2, offset) => {
+        val addr = ldst_addr(rs1, offset)
+        val data = regs.read(rs2)
+        writeMem32(addr, data.toU32)
+      }
+      case RV64Instr.SD(rs1, rs2, offset) => {
+        val addr = ldst_addr(rs1, offset)
+        val data = regs.read(rs2)
+        writeMem64(addr, data)
+      }
+      case RV32Instr.ADDI(rd, rs1, imm) => {
+        regs.write(rd, regs.read(rs1) + sext_w32(imm.decodeSext))
+      }
+      case RV64Instr.ADDIW(rd, rs1, imm) => {
+        regs.write(rd, sext_w32(regs.read(rs1).toInt + imm.decodeSext))
+      }
+      case RV32Instr.XORI(rd, rs1, imm) => {
+        regs.write(rd, regs.read(rs1) ^ sext_w32(imm.decodeSext))
+      }
+      case RV32Instr.ORI(rd, rs1, imm) => {
+        regs.write(rd, regs.read(rs1) | sext_w32(imm.decodeSext))
+      }
+      case RV32Instr.ANDI(rd, rs1, imm) => {
+        regs.write(rd, regs.read(rs1) & sext_w32(imm.decodeSext))
+      }
+      case RV32Instr.SLTI(rd, rs1, shamt) => {
+        regs.write(rd, if (regs.read(rs1).toLong < sext_w32(shamt.decodeSext).toLong) 1 else 0)
+      }
+      case RV32Instr.SLTIU(rd, rs1, shamt) => {
+        regs.write(rd, if (regs.read(rs1) < sext_w32(shamt.decodeSext)) 1 else 0)
+      }
+      case RV32Instr.SLLI(rd, rs1, shamt) => {
+        regs.write(rd, regs.read(rs1) << shamt)
+      }
+      case RV32Instr.SRLI(rd, rs1, shamt) => {
+        regs.write(rd, regs.read(rs1) >> shamt)
+      }
+      case RV64Instr.SLLI(rd, rs1, shamt) => {
+        regs.write(rd, regs.read(rs1) << shamt)
+      }
+      case RV64Instr.SRLI(rd, rs1, shamt) => {
+        regs.write(rd, regs.read(rs1) >> shamt)
+      }
+      case RV32Instr.SRAI(rd, rs1, shamt) => {
+        regs.write(rd, U64(regs.read(rs1).toLong >> shamt.toInt))
+      }
+      case RV64Instr.SRAI(rd, rs1, shamt) => {
+        regs.write(rd, U64(regs.read(rs1).toLong >> shamt.toInt))
+      }
     }
     ???
   }

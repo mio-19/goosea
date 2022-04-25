@@ -47,7 +47,7 @@ final case class U8(x: Byte) {
 
   def <<(y: U8): U8 = U8(x << y.toInt)
 
-  def >>(y: U8): U8 = U8(x >> y.toInt)
+  def >>(y: U8): U8 = U8(x >>> y.toInt)
 }
 
 object U8 {
@@ -113,9 +113,9 @@ final case class U16(x: Short) {
 
   def <<(y: Int): U16 = U16(x << y)
 
-  def >>(y: U16): U16 = U16(x >> y.toInt)
+  def >>(y: U16): U16 = U16(x >>> y.toInt)
 
-  def >>(y: Int): U16 = U16(x >> y)
+  def >>(y: Int): U16 = U16(x >>> y)
 
   def ==(y: U16): Boolean = x == y.toShort
 
@@ -183,7 +183,7 @@ final case class U32(x: Int) {
 
   def <<(y: U32): U32 = U32(x << y.toInt)
 
-  def >>(y: U32): U32 = U32(x >> y.toInt)
+  def >>(y: U32): U32 = U32(x >>> y.toInt)
 
   // undefined for negative numbers
   def ==(y: U32): Boolean = x == y.toInt
@@ -214,6 +214,12 @@ implicit def int2U64(x: Int): U64 = U64.checked(x)
 implicit def long2U64(x: Long): U64 = U64.checked(x)
 
 final case class U64(x: Long) {
+  def toU8: U8 = U8(x.toByte)
+
+  def toU16: U16 = U16(x.toShort)
+
+  def toU32: U16 = U16(x.toInt)
+
   def toLong: Long = x
 
   def toInt: Int = x.toInt
@@ -255,9 +261,13 @@ final case class U64(x: Long) {
 
   def <<(y: Int): U64 = U64(x << y)
 
-  def >>(y: U64): U64 = U64(x >> y.toInt)
+  def <<(y: U8): U64 = U64(x << y.toInt)
 
-  def >>(y: Int): U64 = U64(x >> y)
+  def >>(y: U64): U64 = U64(x >>> y.toInt)
+
+  def >>(y: Int): U64 = U64(x >>> y)
+
+  def >>(y: U8): U64 = U64(x >>> y.toInt)
 
   def compare(y: U64): Int = java.lang.Long.compareUnsigned(x, y.toLong)
 

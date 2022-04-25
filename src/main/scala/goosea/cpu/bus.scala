@@ -78,6 +78,11 @@ package object bus {
     def read16(addr: U64): U16 = this.read(addr, 2).asInstanceOf[U16]
     def read32(addr: U64): U32 = this.read(addr, 4).asInstanceOf[U32]
     def read64(addr: U64): U64 = this.read(addr, 8).asInstanceOf[U64]
+
+    def write8(addr: U64, data: U8): Unit = ???
+    def write16(addr: U64, data: U16): Unit = ???
+    def write32(addr: U64, data: U32): Unit = ???
+    def write64(addr: U64, data: U64): Unit = ???
   }
 
 }
