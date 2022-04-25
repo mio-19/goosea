@@ -181,9 +181,21 @@ final case class U32(x: Int) {
 
   def ^(y: U32): U32 = U32(x ^ y.toInt)
 
+  def <<(y: U8): U32 = U32(x << y.toInt)
+
   def <<(y: U32): U32 = U32(x << y.toInt)
 
+  def <<(y: U64): U32 = U32(x << y.toLong)
+
+  def <<(y: Int): U32 = U32(x << y)
+
   def >>(y: U32): U32 = U32(x >>> y.toInt)
+
+  def >>(y: U64): U32 = U32(x >>> y.toLong)
+
+  def >>(y: Int): U32 = U32(x >>> y)
+
+  def >>(y: U8): U32 = U32(x >>> y.toInt)
 
   // undefined for negative numbers
   def ==(y: U32): Boolean = x == y.toInt
@@ -218,7 +230,7 @@ final case class U64(x: Long) {
 
   def toU16: U16 = U16(x.toShort)
 
-  def toU32: U16 = U16(x.toInt)
+  def toU32: U32 = U32(x.toInt)
 
   def toLong: Long = x
 
@@ -231,6 +243,8 @@ final case class U64(x: Long) {
       BigInteger.valueOf(x & java.lang.Long.MAX_VALUE).add(U64.MAX_VALUE_LONG)
 
   override def toString: String = java.lang.Long.toUnsignedString(x)
+
+  def toString(radix: Int): String = java.lang.Long.toUnsignedString(x, radix)
 
   def unary_~ : U64 = U64(~x)
 

@@ -29,6 +29,11 @@ def sext_w32(x: U32): U64 = {
   val l: Long = i
   U64(l)
 }
+def sext_w32(x: U64): U64 = {
+  val i: Int = x.toInt
+  val l: Long = i
+  U64(l)
+}
 
 def sext_w8(x: U8): U64 = {
   val i: Byte = x.toByte
@@ -299,6 +304,68 @@ final class RV64CPU(
       case RV64Instr.SRAI(rd, rs1, shamt) => {
         regs.write(rd, U64(regs.read(rs1).toLong >> shamt.toInt))
       }
+      case RV64Instr.SLLIW(rd, rs1, shamt) => {
+        regs.write(rd, sext_w32(regs.read(rs1).toU32 << shamt))
+      }
+      case RV64Instr.SRLIW(rd, rs1, shamt) => {
+        regs.write(rd, sext_w32(regs.read(rs1).toU32 >> shamt))
+      }
+      case RV64Instr.SRAIW(rd, rs1, shamt) => {
+        regs.write(rd, sext_w32(U32(regs.read(rs1).toInt >> shamt.toInt)))
+      }
+      case RV32Instr.ADD(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) + regs.read(rs2))
+      }
+      case RV32Instr.SUB(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) - regs.read(rs2))
+      }
+      case RV64Instr.ADDW(rd, rs1, rs2) => {
+        regs.write(rd, sext_w32(regs.read(rs1) + regs.read(rs2)))
+      }
+      case RV64Instr.SUBW(rd, rs1, rs2) => {
+        regs.write(rd, sext_w32(regs.read(rs1) - regs.read(rs2)))
+      }
+      case RV32Instr.SLT(rd, rs1, rs2) => {
+        regs.write(rd, if (regs.read(rs1).toLong < regs.read(rs2).toLong) 1 else 0)
+      }
+      case RV32Instr.SLTU(rd, rs1, rs2) => {
+        regs.write(rd, if (regs.read(rs1) < regs.read(rs2)) 1 else 0)
+      }
+      case RV32Instr.SLL(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) << (regs.read(rs2)&63))
+      }
+      case RV32Instr.SRL(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) >> (regs.read(rs2)&63))
+      }
+      case RV64Instr.SLLW(rd, rs1, rs2) => {
+        regs.write(rd, sext_w32(regs.read(rs1).toU32 << (regs.read(rs2)&31)))
+      }
+      case RV64Instr.SRLW(rd, rs1, rs2) => {
+        regs.write(rd, sext_w32(regs.read(rs1).toU32 >> (regs.read(rs2)&31)))
+      }
+      case RV32Instr.SRA(rd, rs1, rs2) => {
+        regs.write(rd, U64(regs.read(rs1).toLong >> (regs.read(rs2).toInt&63)))
+      }
+      case RV64Instr.SRAW(rd, rs1, rs2) => {
+        regs.write(rd, sext_w32(U32(regs.read(rs1).toInt >> (regs.read(rs2).toInt&31))))
+      }
+
+      case RV32Instr.XOR(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) ^ regs.read(rs2))
+      }
+      case RV32Instr.OR(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) | regs.read(rs2))
+      }
+      case RV32Instr.AND(rd, rs1, rs2) => {
+        regs.write(rd, regs.read(rs1) & regs.read(rs2))
+      }
+
+      case RV32Instr.FENCE(_,_,_,_,_) => {}
+      case RV64Instr.FENCE_I(_,_,_) => {}
+      case RV32Instr.FENCE_TSO => {}
+      case RV32Instr.PAUSE => throw new UnsupportedOperationException("not implemented at PC=0x" + pc.toString(16))
+      case RV32Instr.ECALL => ???
+
     }
     ???
   }
