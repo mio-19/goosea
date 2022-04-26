@@ -5,6 +5,7 @@ import goosea.isa.untyped.*
 import goosea.utils.num.*
 import goosea.mem.*
 import goosea.cpu.bus.*
+import goosea.cpu.csr.CSRMap.{FCSR, FCSR_DZ_MASK}
 import goosea.cpu.csr.CSRRegs
 import goosea.isa.*
 
@@ -396,7 +397,7 @@ final class RV64CPU(
         val dividend = regs.read(rs1).toLong
         val divisor = regs.read(rs2).toLong
         val result = if (divisor == 0) {
-          ???
+          csrs.write_unchecked(FCSR, csrs.read_unchecked(FCSR) | FCSR_DZ_MASK)
           U64.MaxValue
         } else if (dividend == Long.MinValue && divisor == -1) {
           U64(Long.MinValue)
