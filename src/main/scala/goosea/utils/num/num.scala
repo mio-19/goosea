@@ -175,6 +175,8 @@ final case class U32(x: Int) {
 
   def /(y: U32): U32 = U32(Integer.divideUnsigned(x, y.toInt))
 
+  def %(y: U32): U32 = U32(Integer.remainderUnsigned(x, y.toInt))
+
   def &(y: U32): U32 = U32(x & y.toInt)
 
   def |(y: U32): U32 = U32(x | y.toInt)
@@ -314,7 +316,7 @@ object U64 {
 
   def apply(x: BigInteger): U64 = new U64(x.longValue())
 
-  def apply(x:String):U64 = U64(new BigInteger(x))
+  def apply(x: String): U64 = U64(new BigInteger(x))
 
   def checked(x: Int): U64 = if (0 <= x) {
     U64(x)

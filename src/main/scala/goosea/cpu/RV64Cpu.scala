@@ -36,6 +36,10 @@ def sext_w32(x: U64): U64 = {
   val l: Long = i
   U64(l)
 }
+def sext_w32(x: Int):U64 = {
+  val l: Long = x
+  U64(l)
+}
 
 def sext_w8(x: U8): U64 = {
   val i: Byte = x.toByte
@@ -403,6 +407,88 @@ final class RV64CPU(
           U64(Long.MinValue)
         } else {
           U64(dividend / divisor)
+        }
+        regs.write(rd, result)
+      }
+      case RV32Instr.DIVU(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1)
+        val divisor = regs.read(rs2)
+        val result = if (divisor == 0) {
+          csrs.write_unchecked(FCSR, csrs.read_unchecked(FCSR) | FCSR_DZ_MASK)
+          U64.MaxValue
+        } else {
+          dividend / divisor
+        }
+        regs.write(rd, result)
+      }
+      case RV32Instr.REM(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1).toLong
+        val divisor = regs.read(rs2).toLong
+        val result = if (divisor == 0) {
+          U64(dividend)
+        } else if (dividend == Long.MinValue && divisor == -1) {
+          U64(0)
+        } else {
+          U64(dividend % divisor)
+        }
+        regs.write(rd, result)
+      }
+      case RV32Instr.REMU(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1)
+        val divisor = regs.read(rs2)
+        val result = if (divisor == 0) {
+          dividend
+        } else {
+          dividend % divisor
+        }
+        regs.write(rd, result)
+      }
+      case RV64Instr.MULW(rd, rs1, rs2) => {
+        regs.write(rd, sext_w32(U32(regs.read(rs1).toInt * regs.read(rs2).toInt)))
+      }
+      case RV64Instr.DIVW(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1).toInt
+        val divisor = regs.read(rs2).toInt
+        val result = if (divisor == 0) {
+          csrs.write_unchecked(FCSR, csrs.read_unchecked(FCSR) | FCSR_DZ_MASK)
+          U64.MaxValue
+        } else if (dividend == Int.MinValue && divisor == -1) {
+          sext_w32(dividend)
+        } else {
+          sext_w32(dividend / divisor)
+        }
+        regs.write(rd, result)
+      }
+      case RV64Instr.DIVUW(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1).toU32
+        val divisor = regs.read(rs2).toU32
+        val result = if (divisor == 0) {
+          csrs.write_unchecked(FCSR, csrs.read_unchecked(FCSR) | FCSR_DZ_MASK)
+          U64.MaxValue
+        } else {
+          sext_w32(dividend / divisor)
+        }
+        regs.write(rd, result)
+      }
+      case RV64Instr.REMW(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1).toInt
+        val divisor = regs.read(rs2).toInt
+        val result = if (divisor == 0) {
+          sext_w32(dividend)
+        } else if (dividend == Int.MinValue && divisor == -1) {
+          U64(0)
+        } else {
+          sext_w32(dividend % divisor)
+        }
+        regs.write(rd, result)
+      }
+      case RV64Instr.REMUW(rd, rs1, rs2) => {
+        val dividend = regs.read(rs1).toU32
+        val divisor = regs.read(rs2).toU32
+        val result = if (divisor == 0) {
+          sext_w32(dividend)
+        } else {
+          sext_w32(dividend % divisor)
         }
         regs.write(rd, result)
       }
