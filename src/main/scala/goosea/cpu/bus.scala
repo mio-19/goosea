@@ -11,7 +11,7 @@ import scala.collection.immutable.HashMap
 
 package object bus {
   val RV64_MEMORY_BASE = 0x80000000
-  val RV64_MEMORY_SIZE = 1024 * 1024 * 1024
+  val RV64_MEMORY_SIZE = 8 * 1024 * 1024 * 1024
   val RV64_MEMORY_END = RV64_MEMORY_BASE + RV64_MEMORY_SIZE
 
   val VIRT_MROM_BASE = 0x1000

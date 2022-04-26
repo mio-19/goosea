@@ -6,15 +6,14 @@ import java.nio.ByteBuffer
 import java.io.ByteArrayInputStream
 
 
-// 1MB
-val pageSize: Int = 1024 * 1024 // 2^20
-val pageAddr: Int = 20
+// 4MB
+val pageSize: Int = 4 * 1024 * 1024 // 2^22
+val pageAddr: Int = 22
 val pageMask: Int = (1 << pageAddr) - 1
 
-// 1GB
 // thread-safe
 // addr is unsigned Long
-final class RawMem(pageNumber: Int = 1024) {
+final class RawMem(pageNumber: Int) {
   val buff: Array[ByteBuffer] = new Array[ByteBuffer](pageNumber)
 
   def get(addr: Long): Byte = {

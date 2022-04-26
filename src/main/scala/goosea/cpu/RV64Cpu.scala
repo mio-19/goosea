@@ -609,6 +609,63 @@ final class RV64CPU(
         regs.write(rd, data)
       }
 
+      case RV32Instr.AMOMIN_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        val rs2v = regs.read(rs2).toU32
+        writeMem32(addr, if(data.toInt < rs2v.toInt) data else rs2v)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOMIN_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        val rs2v = regs.read(rs2)
+        writeMem64(addr, if(data.toLong < rs2v.toLong) data else rs2v)
+        regs.write(rd, data)
+      }
+      case RV32Instr.AMOMAX_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        val rs2v = regs.read(rs2).toU32
+        writeMem32(addr, if(data.toInt > rs2v.toInt) data else rs2v)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOMAX_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        val rs2v = regs.read(rs2)
+        writeMem64(addr, if(data.toLong > rs2v.toLong) data else rs2v)
+        regs.write(rd, data)
+      }
+      case RV32Instr.AMOMINU_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        val rs2v = regs.read(rs2).toU32
+        writeMem32(addr, if(data < rs2v) data else rs2v)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOMINU_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        val rs2v = regs.read(rs2)
+        writeMem64(addr, if(data < rs2v) data else rs2v)
+        regs.write(rd, data)
+      }
+      case RV32Instr.AMOMAXU_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        val rs2v = regs.read(rs2).toU32
+        writeMem32(addr, if(data > rs2v) data else rs2v)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOMAXU_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        val rs2v = regs.read(rs2)
+        writeMem64(addr, if(data > rs2v) data else rs2v)
+        regs.write(rd, data)
+      }
+
 
 
     }

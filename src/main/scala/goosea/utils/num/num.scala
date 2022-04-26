@@ -203,6 +203,16 @@ final case class U32(x: Int) {
   def ==(y: U32): Boolean = x == y.toInt
 
   def ==(y: Int): Boolean = x == y
+
+  def compare(y: U32): Int = java.lang.Integer.compareUnsigned(x, y.toInt)
+
+  def <(y: U32): Boolean = this.compare(y) < 0
+
+  def <=(y: U32): Boolean = this.compare(y) <= 0
+
+  def >(y: U32): Boolean = this.compare(y) > 0
+
+  def >=(y: U32): Boolean = this.compare(y) >= 0
 }
 
 object U32 {
@@ -299,6 +309,7 @@ final case class U64(x: Long) {
 
   // undefined for negative numbers
   def ==(y: Int): Boolean = x == y
+
   def !=(y: Int): Boolean = x != y
 
 }
