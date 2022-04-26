@@ -493,6 +493,9 @@ final class RV64CPU(
         regs.write(rd, result)
       }
 
+      // the valheim trap
+      case RV32Instr.EBREAK => throw CPUThrowable.Breakpoint
+
     }
     ???
   }

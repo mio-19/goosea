@@ -24,7 +24,7 @@ object IRQ {
   case object STI extends IRQ
 }
 
-sealed trait CPUThrowable extends Exception
+sealed abstract class CPUThrowable extends Exception("CPU Throwable", null, false, false)
 
 object CPUThrowable {
   case object IllegalInstruction extends CPUThrowable
