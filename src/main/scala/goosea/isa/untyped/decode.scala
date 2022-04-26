@@ -116,7 +116,7 @@ private def zicsr_uimm[T](opcode: (rd: Reg, i: Imm32_4_0, csr: Imm32_11_0) => T,
   val it = untyped.i
   opcode(reg(it.rd), Imm32_4_0(it.rs1), Imm32_11_0(it.imm11_0))
 }
-private def ra[T](opcode: (rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def ra[T, R <: Reg](opcode: (rd: R, rs1: R, rs2: R, flag: AQRL) => T, untyped: Bytecode, reg: Int => R): T = {
   val rt = untyped.ra
   opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2), AQRL(rt.aq, rt.rl))
 }

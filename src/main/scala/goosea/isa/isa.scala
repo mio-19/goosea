@@ -166,27 +166,27 @@ object RV64Instr {
   final case class REMUW(rd: Reg.X, rs1: Reg.X, rs2: Reg.X) extends RV64Instr
 
   // RV64A
-  final case class LR_D(rd: Reg, rs1: Reg, flag: AQRL) extends RV64Instr
+  final case class LR_D(rd: Reg.X, rs1: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class SC_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class SC_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOSWAP_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOSWAP_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOADD_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOADD_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOXOR_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOXOR_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOAND_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOAND_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOOR_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOOR_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOMIN_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMIN_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOMAX_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMAX_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOMINU_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMINU_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
-  final case class AMOMAXU_D(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV64Instr
+  final case class AMOMAXU_D(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV64Instr
 
   // RV64F
   final case class FCVT_L_S(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV64Instr
@@ -350,25 +350,25 @@ object RV32Instr {
   // RV32A
   final case class LR_W(rd: Reg.X, rs1: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class SC_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class SC_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOSWAP_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOSWAP_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOADD_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOADD_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOXOR_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOXOR_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOAND_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOAND_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOOR_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOOR_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOMIN_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMIN_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOMAX_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMAX_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOMINU_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMINU_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
-  final case class AMOMAXU_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
+  final case class AMOMAXU_W(rd: Reg.X, rs1: Reg.X, rs2: Reg.X, flag: AQRL) extends RV32Instr
 
   // RV32F
   final case class FLW(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr

@@ -516,6 +516,99 @@ final class RV64CPU(
         regs.write(rd, sext_w32(data))
         reserved.addOne(addr)
       }
+      case RV32Instr.SC_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        if(reserved.contains(addr)) {
+          // "Regardless of success or failure, executing an SC.W instruction
+          // invalidates any reservation held by this hart. "
+          reserved.remove(addr)
+          writeMem32(addr, regs.read(rs2).toU32)
+          regs.write(rd, 0)
+        } else {
+          reserved.remove(addr)
+          regs.write(rd, 1)
+        }
+      }
+      case RV64Instr.LR_D(rd, rs1, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        regs.write(rd, data)
+        reserved.addOne(addr)
+      }
+      case RV64Instr.SC_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        if(reserved.contains(addr)) {
+          reserved.remove(addr)
+          writeMem64(addr, regs.read(rs2))
+          regs.write(rd, 0)
+        } else {
+          reserved.remove(addr)
+          regs.write(rd, 1)
+        }
+      }
+
+      case RV32Instr.AMOADD_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        writeMem32(addr, data + regs.read(rs2).toU32)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOADD_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        writeMem64(addr, data + regs.read(rs2))
+        regs.write(rd, data)
+      }
+      case RV32Instr.AMOSWAP_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        writeMem32(addr, regs.read(rs2).toU32)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOSWAP_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        writeMem64(addr, regs.read(rs2))
+        regs.write(rd, data)
+      }
+
+      case RV32Instr.AMOXOR_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        writeMem32(addr, data ^ regs.read(rs2).toU32)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV32Instr.AMOAND_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        writeMem32(addr, data & regs.read(rs2).toU32)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV32Instr.AMOOR_W(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        writeMem32(addr, data | regs.read(rs2).toU32)
+        regs.write(rd, sext_w32(data))
+      }
+      case RV64Instr.AMOXOR_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        writeMem64(addr, data ^ regs.read(rs2))
+        regs.write(rd, data)
+      }
+      case RV64Instr.AMOAND_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        writeMem64(addr, data & regs.read(rs2))
+        regs.write(rd, data)
+      }
+      case RV64Instr.AMOOR_D(rd, rs1, rs2, _) => {
+        val addr = amo_addr(rs1, 8)
+        val data = readMem64(addr)
+        writeMem64(addr, data | regs.read(rs2))
+        regs.write(rd, data)
+      }
+
 
 
     }
