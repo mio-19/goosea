@@ -9,6 +9,8 @@ import goosea.cpu.csr.CSRMap.{FCSR, FCSR_DZ_MASK}
 import goosea.cpu.csr.CSRRegs
 import goosea.isa.*
 
+import scala.collection.mutable
+
 /* VM modes (satp.mode) privileged ISA V20211203 */
 val VM_V20211203_MBARE = 0
 val VM_V20211203_SV39 = 8
@@ -72,6 +74,8 @@ final class RV64CPU(
                      csrs: CSRRegs = CSRRegs(),
                      mode: PrivilegeMode = PrivilegeMode.Machine,
                      bus: Bus = Bus(),
+                     // used by LR/SC
+                     reserved: mutable.Set[U64] = mutable.Set(),
                      journal: Journal = JournalDisabled,
                      // used by wfi instruction
                      wfi: Boolean = false,
@@ -148,7 +152,16 @@ final class RV64CPU(
     journal.trace(Trace.TraceReg.Write(reg, value))
   }
 
-  def ldst_addr(rs1: Reg, offset: Imm32): U64 = regs.read(rs1) + sext_w32(offset.decodeSext)
+  def ldst_addr(rs1: Reg.X, offset: Imm32): U64 = regs.read(rs1) + sext_w32(offset.decodeSext)
+
+  def amo_addr(rs1: Reg.X, align: Int): U64 = {
+    val addr = regs.read(rs1)
+    if(addr % align != 0) {
+      throw CPUThrowable.LoadAddressMisaligned(addr)
+    }
+    addr
+  }
+
 
   def readPC: U64 = readReg(Reg.PC)
 
@@ -493,8 +506,17 @@ final class RV64CPU(
         regs.write(rd, result)
       }
 
-      // the valheim trap
+      // the goosea trap
       case RV32Instr.EBREAK => throw CPUThrowable.Breakpoint
+
+      // RVA
+      case RV32Instr.LR_W(rd, rs1, _) => {
+        val addr = amo_addr(rs1, 4)
+        val data = readMem32(addr)
+        regs.write(rd, sext_w32(data))
+        reserved.addOne(addr)
+      }
+
 
     }
     ???

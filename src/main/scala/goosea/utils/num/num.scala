@@ -299,6 +299,8 @@ final case class U64(x: Long) {
 
   // undefined for negative numbers
   def ==(y: Int): Boolean = x == y
+  def !=(y: Int): Boolean = x != y
+
 }
 
 object U64 {

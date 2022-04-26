@@ -74,7 +74,7 @@ private def b[T, R <: Reg](opcode: (R, R, Imm32_12_1) => T, untyped: Bytecode, r
   val imm = imm12.bitor(imm11).bitor(imm10_5).bitor(imm4_1)
   opcode(reg(bt.rs1), reg(bt.rs2), Imm32_12_1.from(imm))
 }
-private def s[T](opcode: (Reg, Reg, Imm32_11_0) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def s[T, R <: Reg](opcode: (R, R, Imm32_11_0) => T, untyped: Bytecode, reg: Int => R): T = {
   val st = untyped.s
   val imm11_5 = Imm32_11_5(st.imm11_5)
   val imm4_0 = Imm32_4_0(st.imm4_0)
@@ -92,7 +92,7 @@ private def rshamt32[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int
   val rt = untyped.rshamt32
   opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
 }
-private def rshamt64[T](opcode: (Reg, Reg, U8) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def rshamt64[T, R <: Reg](opcode: (R, R, U8) => T, untyped: Bytecode, reg: Int => R): T = {
   val rt = untyped.rshamt64
   opcode(reg(rt.rd), reg(rt.rs1), U8(rt.shamt))
 }
@@ -120,7 +120,7 @@ private def ra[T](opcode: (rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) => T, untype
   val rt = untyped.ra
   opcode(reg(rt.rd), reg(rt.rs1), reg(rt.rs2), AQRL(rt.aq, rt.rl))
 }
-private def ra_only_rs1[T](opcode: (rd: Reg, rs1: Reg, flag: AQRL) => T, untyped: Bytecode, reg: Int => Reg): T = {
+private def ra_only_rs1[T, R <: Reg](opcode: (rd: R, rs1: R, flag: AQRL) => T, untyped: Bytecode, reg: Int => R): T = {
   val rt = untyped.ra
   if (rt.rs2 != 0) throw new IllegalArgumentException()
   opcode(reg(rt.rd), reg(rt.rs1), AQRL(rt.aq, rt.rl))

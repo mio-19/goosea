@@ -124,17 +124,17 @@ sealed trait RV64Instr extends Instr
 
 object RV64Instr {
   // RV64I
-  final case class LWU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class LWU(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV64Instr
 
-  final case class LD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class LD(rd: Reg, rs1: Reg.X, i: Imm32_11_0) extends RV64Instr
 
-  final case class SD(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV64Instr
+  final case class SD(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV64Instr
 
-  final case class SLLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SLLI(rd: Reg.X, rs1: Reg.X, shiftAmount: U8) extends RV64Instr
 
-  final case class SRLI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SRLI(rd: Reg.X, rs1: Reg.X, shiftAmount: U8) extends RV64Instr
 
-  final case class SRAI(rd: Reg, rs1: Reg, shiftAmount: U8) extends RV64Instr
+  final case class SRAI(rd: Reg.X, rs1: Reg.X, shiftAmount: U8) extends RV64Instr
 
   final case class ADDIW(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV64Instr
 
@@ -266,21 +266,21 @@ object RV32Instr {
 
   final case class BGEU(rs1: Reg.X, rs2: Reg.X, i: Imm32_12_1) extends RV32Instr
 
-  final case class LB(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LB(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class LH(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LH(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class LW(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LW(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class LBU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LBU(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class LHU(rd: Reg, rs1: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class LHU(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class SB(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SB(rs1: Reg.X, rs2: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class SH(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SH(rs1: Reg.X, rs2: Reg.X, i: Imm32_11_0) extends RV32Instr
 
-  final case class SW(rs1: Reg, rs2: Reg, i: Imm32_11_0) extends RV32Instr
+  final case class SW(rs1: Reg.X, rs2: Reg.X, i: Imm32_11_0) extends RV32Instr
 
   final case class ADDI(rd: Reg.X, rs1: Reg.X, i: Imm32_11_0) extends RV32Instr
 
@@ -348,7 +348,7 @@ object RV32Instr {
   final case class REMU(rd: Reg, rs1: Reg, rs2: Reg) extends RV32Instr
 
   // RV32A
-  final case class LR_W(rd: Reg, rs1: Reg, flag: AQRL) extends RV32Instr
+  final case class LR_W(rd: Reg.X, rs1: Reg.X, flag: AQRL) extends RV32Instr
 
   final case class SC_W(rd: Reg, rs1: Reg, rs2: Reg, flag: AQRL) extends RV32Instr
 
