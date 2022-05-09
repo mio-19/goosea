@@ -74,6 +74,11 @@ final class RawMem(pageNumber: Int) {
       this.put(addr + i, xs(i))
     }
   }
+  def load[T <: Iterable[Byte]](addr: Long, xs: T): Unit = {
+    for ((x, i) <- xs.zipWithIndex) {
+      this.put(addr + i, x)
+    }
+  }
 
   def load(addr: Long, xs: ByteArrayInputStream): Unit = {
     var i = addr
@@ -102,6 +107,10 @@ final case class Mem(base: U64, size: U64, memory: RawMem) {
   def read32(addr: U64): U32 = U32(memory.getInt(toPhys(addr).toLong))
 
   def read64(addr: U64): U64 = U64(memory.getLong(toPhys(addr).toLong))
+
+  def load(addr: U64, xs: Array[Byte]): Unit = memory.load(toPhys(addr).toLong, xs)
+
+  def load(addr: U64, xs: ByteArrayInputStream): Unit = memory.load(toPhys(addr).toLong, xs)
 }
 
 object Mem {

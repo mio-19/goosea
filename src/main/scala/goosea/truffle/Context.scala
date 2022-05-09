@@ -16,5 +16,6 @@ object Context {
 
   val REFERENCE: ContextReference[Context] = ContextReference.create(classOf[GooseaLang])
 
-  def get(node: GooseaNode): Context = REFERENCE.get(node)
+  def get(node: GooseaAbstractNode): Context = REFERENCE.get(node)
+  def get(node: GooseaRootNode): Context = REFERENCE.get(node)
 }

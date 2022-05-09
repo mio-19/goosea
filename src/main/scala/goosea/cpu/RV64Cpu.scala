@@ -70,19 +70,19 @@ object PrivilegeMode {
 }
 
 final class RV64CPU(
-                     regs: Regs = Regs(),
-                     csrs: CSRRegs = CSRRegs(),
-                     mode: PrivilegeMode = PrivilegeMode.Machine,
-                     bus: Bus = Bus(),
+                     val regs: Regs = Regs(),
+                     val csrs: CSRRegs = CSRRegs(),
+                     val mode: PrivilegeMode = PrivilegeMode.Machine,
+                     val bus: Bus = Bus(),
                      // used by LR/SC
-                     reserved: mutable.Set[U64] = mutable.Set(),
-                     journal: Journal = JournalDisabled,
+                     val reserved: mutable.Set[U64] = mutable.Set(),
+                     val journal: Journal = JournalDisabled,
                      // used by wfi instruction
-                     wfi: Boolean = false,
+                     val wfi: Boolean = false,
                      // Virtual memory translation mode
-                     vmmode: VMMode = VMMode.MBARE,
+                     val vmmode: VMMode = VMMode.MBARE,
                      // physical page number used in virtual memory translation
-                     vmppn: U64 = 0,
+                     val vmppn: U64 = 0,
                    ) {
   def fetchMem(addr: U64): U32 = {
     val paddr = this.translate(addr, Reason.Fetch)

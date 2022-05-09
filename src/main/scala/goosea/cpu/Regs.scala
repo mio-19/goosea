@@ -4,11 +4,11 @@ import goosea.utils._
 import goosea.utils.num._
 import goosea.isa._
 
-final class Regs(var x: Array[U64], var csr: U64, var pc: U64) {
-  if (x.length != 32) throw new IllegalArgumentException()
+final class Regs(var gr: Array[U64], var csr: U64, var pc: U64) {
+  if (gr.length != 32) throw new IllegalArgumentException()
 
   def read(reg: Reg): U64 = reg match {
-    case Reg.X(id) => x(id)
+    case Reg.X(id) => gr(id)
     case Reg.CSR => csr
     case Reg.PC => pc
     // TODO: implement
@@ -16,7 +16,7 @@ final class Regs(var x: Array[U64], var csr: U64, var pc: U64) {
 
   def write(reg: Reg, value: U64): Unit =
     reg match {
-      case Reg.X(id) => x(id) = value
+      case Reg.X(id) => gr(id) = value
       case Reg.CSR => csr = value
       case Reg.PC => pc = value
       // TODO: implement

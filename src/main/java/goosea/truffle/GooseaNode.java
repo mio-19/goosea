@@ -29,6 +29,11 @@ public class GooseaNode extends GooseaAbstractNode {
         this.pc = pc;
     }
 
+    public GooseaNode(U64 pc) {
+        this.pc = pc.toLong();
+    }
+
+
     @Override
     public void execute(VirtualFrame frame) {
         Context context = getContext();
