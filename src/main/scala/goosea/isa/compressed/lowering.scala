@@ -22,17 +22,6 @@ def arith[T, R >: Reg.X](op: (rd: R, rs1: R, rs2: R) => T, untyped: Bytecode16) 
   op(rd, rd, rs2)
 }
 
-object Instr {
-  def try_from_compressed(untyped: Bytecode16): Option[Instr] = {
-    val repr = untyped.repr
-    ((repr, repr & 3): (Int, Int)) match {
-      case (0, _) => None
-      case (_, 0) | (_, 1) | (_, 2) => decode_untyped(untyped)
-      case _ => None
-    }
-  }
-}
-
 def decode_untyped(untyped: Bytecode16): Option[Instr] = {
   val inst = untyped.repr
   Some(untyped.opcode match {

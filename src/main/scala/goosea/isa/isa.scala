@@ -1,6 +1,8 @@
 package goosea.isa
 
-import goosea.utils.num._
+import goosea.isa.compressed.Bytecode16
+import goosea.isa.untyped.Bytecode
+import goosea.utils.num.*
 
 import scala.annotation.targetName
 import scala.language.implicitConversions
@@ -475,4 +477,17 @@ object RV32Instr {
   final case class FCVT_D_W(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
 
   final case class FCVT_D_WU(rd: Reg, rs1: Reg, mode: RoundingMode) extends RV32Instr
+}
+
+
+object Instr {
+  def try_from_compressed(untyped: Bytecode16): Option[Instr] = {
+    val repr = untyped.repr
+    ((repr, repr & 3): (Int, Int)) match {
+      case (0, _) => None
+      case (_, 0) | (_, 1) | (_, 2) => compressed.decode_untyped(untyped)
+      case _ => None
+    }
+  }
+  def try_from(bt: Bytecode): Option[Instr] = untyped.decode(bt)
 }

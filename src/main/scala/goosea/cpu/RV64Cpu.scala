@@ -173,21 +173,41 @@ final class RV64CPU(
 
   def fetch: Fetch = {
     val pc = readPC
-    ???
+    val instr = this.fetchMem(pc)
+    val bytecode = Bytecode(instr)
+    val compressed = Bytecode16(instr.toU16)
+    journal.trace(Trace.TraceInstr.Fetched(pc, bytecode, compressed))
+    Fetch(pc, bytecode, compressed)
   }
 
   def fetchForMock(pc: U64): U32 = {
-    ???
+    this.fetchMem(pc)
   }
 
   def mockFetch(pc: U64, instr: U32): Fetch = {
-    ???
+    val bytecode = Bytecode(instr)
+    val compressed = Bytecode16(instr.toU16)
+    journal.trace(Trace.TraceInstr.Fetched(pc, bytecode, compressed))
+    Fetch(pc, bytecode, compressed)
   }
 
   final case class Decode(from: Either[Bytecode, Bytecode16], decoded: Instr)
 
   def decode(fetch: Fetch): Decode = {
-    ???
+    val Fetch(pc, untyped, compressed) = fetch
+    Instr.try_from_compressed(compressed) match {
+      case Some(instr) => {
+        journal.trace(Trace.TraceInstr.DecodedCompressed(pc, compressed, instr))
+        Decode(Right(compressed), instr)
+      }
+      case None => Instr.try_from(untyped) match {
+        case Some(instr) => {
+          journal.trace(Trace.TraceInstr.Decoded(pc, untyped, instr))
+          Decode(Left(untyped), instr)
+        }
+        case None => throw CPUThrowable.IllegalInstruction
+      }
+    }
   }
 
   // throws CPUThrowable

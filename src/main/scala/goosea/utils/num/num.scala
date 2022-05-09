@@ -126,6 +126,8 @@ final case class U16(x: Short) {
 }
 
 object U16 {
+  def apply(x: Short): U16 = new U16(x)
+
   def apply(x: Int): U16 = U16(x.toShort)
 
   def checked(x: Int): U16 = if (0 <= x && x < 65536) {
@@ -146,9 +148,13 @@ final case class U32(x: Int) {
 
   def toLong: Long = Integer.toUnsignedLong(x)
 
+  def toShort = x.toShort
+
   def toBitVector: BitVector = BitVector.fromLong(this.toLong, 32)
 
   def toU64: U64 = U64(this.toLong)
+
+  def toU16: U16 = U16(this.toShort)
 
   override def toString: String = Integer.toUnsignedString(x)
 
