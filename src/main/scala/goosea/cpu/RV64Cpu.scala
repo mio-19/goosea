@@ -669,7 +669,8 @@ final class RV64CPU(
 
 
     }
-    ???
+    journal.trace(if(isCompressed)Trace.TraceInstr.ExecutedCompressed(pc, instr) else Trace.TraceInstr.Executed(pc, instr))
+    regs.write(Reg.PC, nextPC)
   }
 
   def tick: Unit = {
