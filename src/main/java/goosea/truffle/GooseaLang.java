@@ -9,6 +9,6 @@ public final class GooseaLang extends TruffleLanguage<Context>{
 
     @Override
     protected @NotNull Context createContext(Env env) {
-        return Context.apply();
+        return Context.apply(this);
     }
 }

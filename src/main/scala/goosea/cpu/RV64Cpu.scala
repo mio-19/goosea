@@ -162,7 +162,6 @@ final class RV64CPU(
     addr
   }
 
-
   def readPC: U64 = readReg(Reg.PC)
 
   def writePC(pc: U64) = writeReg(Reg.PC, pc)
