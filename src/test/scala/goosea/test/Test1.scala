@@ -30,10 +30,9 @@ final case class Test(pc: U64, instrs: Array[Byte], expected: String) {
   def run: Unit = {
     val sb = new mutable.StringBuilder
     val cpu = new GooseaLang
-    val root = new GooseaRootNode(cpu, new GooseaNode(pc))
-    val context = Context.get(root)
+    val context = cpu.getContext
     context.cpu.bus.mem.load(pc, instrs)
-    root.createDirectCallNode().call()
+    context.writePC(pc)
   }
 }
 

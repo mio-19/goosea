@@ -1,10 +1,11 @@
 package goosea.truffle
 
-import goosea.cpu._
-import goosea.utils._
-import goosea.utils.num._
-import goosea.mem._
+import goosea.cpu.*
+import goosea.utils.*
+import goosea.utils.num.*
+import goosea.mem.*
 import com.oracle.truffle.api.TruffleLanguage.ContextReference
+import com.oracle.truffle.api.nodes.Node
 
 final case class Context(lang: GooseaLang,
                          cpu: RV64CPU = RV64CPU(),
@@ -15,6 +16,8 @@ final case class Context(lang: GooseaLang,
   def getRootNode(pc: U64) = new GooseaRootNode(lang, getNode(pc))
 
   def tick(): Unit = getRootNode(cpu.readPC).createDirectCallNode().call()
+
+  def writePC(pc: U64): Unit = cpu.writePC(pc)
 }
 
 object Context {
@@ -22,7 +25,5 @@ object Context {
 
   val REFERENCE: ContextReference[Context] = ContextReference.create(classOf[GooseaLang])
 
-  def get(node: GooseaAbstractNode): Context = REFERENCE.get(node)
-
-  def get(node: GooseaRootNode): Context = REFERENCE.get(node)
+  def get(node: Node): Context = REFERENCE.get(node)
 }
