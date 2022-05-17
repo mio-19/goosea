@@ -15,4 +15,16 @@ public final class GooseaLang extends TruffleLanguage<Context>{
     public @NotNull Context getContext() {
         return ContextGetter.get(this);
     }
+
+    static {
+        // check if GraalVM runtime is installed
+        try {
+            Class.forName("com.oracle.truffle.api.impl.DefaultTruffleRuntime");
+            if (!System.getProperty("java.vm.vendor").contains("GraalVM")) {
+                throw new ClassNotFoundException("GraalVM runtime is not installed");
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Goosea requires GraalVM to be installed.");
+        }
+    }
 }

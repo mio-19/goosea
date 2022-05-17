@@ -12,9 +12,9 @@ lazy val root = project
       "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
       "org.scodec" %% "scodec-core" % "2.1.0",
       "org.scodec" %% "scodec-bits" % "1.1.30",
-      "org.graalvm.truffle" % "truffle-api" % "22.0.0",
+      "org.graalvm.truffle" % "truffle-api" % "22.0.0" % Compile,
       "org.jetbrains" % "annotations" % "23.0.0",
-      //"org.jooq" % "joou" % "0.9.4",
-      //"it.unimi.dsi" % "fastutil" % "8.5.8",
+      "org.scalactic" %% "scalactic" % "3.2.12",
+      "org.scalatest" %% "scalatest" % "3.2.12" % "test"
     )
   )

@@ -3,7 +3,10 @@ package goosea.test
 import goosea.cpu.Regs
 import goosea.truffle.{Context, GooseaLang, GooseaNode, GooseaRootNode}
 import goosea.utils.num.*
-import org.junit.Test
+import org.scalatest._
+import flatspec._
+import matchers._
+
 
 import scala.collection.mutable
 
@@ -13,7 +16,7 @@ val regs:Array[String] = Array(
   "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6")
 
-def Instrs(xs: U32*): Array[Byte] = {
+def Instrs(xs: Long*): Array[Byte] = {
   val bytes = new Array[Byte](xs.length * 4)
   var i = 0
   for (x <- xs) {
@@ -60,7 +63,7 @@ def regsToString(regs: Regs): String = {
   sb.toString()
 }
 
-val test1 = Test(0x80000000, Instrs(
+val test1 = Test(U64(0x80000000), Instrs(
   0x3e800093, // addi x1 , x0,   1000  /* x1  = 1000 0x3E8 */
   0x7d008113, // addi x2 , x1,   2000  /* x2  = 3000 0xBB8 */
   0xc1810193, // addi x3 , x2,  -1000  /* x3  = 2000 0x7D0 */
@@ -73,6 +76,12 @@ val test1 = Test(0x80000000, Instrs(
     |pc=0x80000010 1:ra=0x3e8 2:sp=0xbb8 3:gp=0x7d0
     |pc=0x80000014 1:ra=0x3e8 2:sp=0xbb8 3:gp=0x7d0 5:t0=0x3e8""".stripMargin)
 
-class Test1 {
+object Test1 {
   def t1(): Unit = test1.check
+}
+
+class ExampleSpec extends AnyFlatSpec with should.Matchers {
+  "test1" should "pass" in {
+    Test1.t1()
+  }
 }
